@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+	
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio – Philippe Buteau</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: "Poppins", sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        header {
+            background: #111;
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 3rem;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.8;
+        }
+
+        nav {
+            background: #222;
+            padding: 10px;
+            text-align: center;
+        }
+
+        nav a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        section {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        h2 {
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 5px;
+        }
+
+        .projects {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .project {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .project img {
+            width: 100%;
+            border-radius: 5px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #111;
+            color: white;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+	<h2>Portfolio</h2>
+    <h1>Philippe Buteau</h1>
+    <p>Administrateur Réseau</p>
+</header>
+
+<nav>
+	<a href="../../index.html">Accueil</a>
+	<a href="../scripts.html">Page Précédente</a>
+    <a href="#Descriptif">Descriptif</a>
+    <a href="#Démonstration">Démonstration</a>
+    <a href="#contact">Contact</a>
+</nav>
+
+<section id="Descriptif">
+	<h1>Outil de configuration de serveur linux</h1>
+
+	<h2>Contexte</h2>
+	<p>Cette outil fait partie du contenu d'un cours en gestion de bases de données relationnelles. L'objectif est d'automatiser certains processus avec un
+	script bash.</p>
+	<p>Les processus concernés sont par l'autmatisation sont principalement en lien avec les sauvegardes de données. Ces dernières doivent se programer facilement
+	pour etre sauvegarder reguilierement. De plus, les sauvegardes doivent etre configurable pour se diviser en base de donnees et en table au besoin, tout
+	en permettant l'usage d'options.</p>
+	<p>Les sauvegardes vont donc s'accumuler et prendre de l'espace disque inutilement, il faut aussi automatiser le ménage des données. Se ménage doit etre
+	organisé pour conserver un certain nombre de sauvegardes pour chaque type de sauvegardes qui existent sur le disque. Les sauvegardes doivent donc etre 
+	nommees de facon coherente et automatiquement pour eviter les erreurs.</p>
+	<p>Le script permettra aussi la creation d'utilisateurs, la gestion des permissions, le chiffrement des données avec un mot de passe et plus.</p>
+
+	<h2>Mandat</h2>
+		<ul>
+		  <li>a venir :</li>
+		  <ul>
+
+		  </ul>
+		</ul>
+
+<section id="Démonstration">
+	<h2>Démonstration : (à venir...)</h2>
+	<div style="text-align: center;">
+	  <video controls width="640">
+		<source src="builder_demo.mp4" type="video/mp4">
+		Votre navigateur ne supporte pas la lecture vidéo.
+	  </video>
+	</div>
+</section>
+
+
+<section id="contact">
+    <h2>Contact</h2>
+    <p>📧 p.buteau@hotmail.ca</p>
+    <p>🔗 <a href="https://www.linkedin.com/in/philippe-buteau-7a0274110" target="_blank">LinkedIn</a></p>
+</section>
+
+<footer>
+    © 2026 Philippe Buteau – Tous droits réservés
+</footer>
+
+</body>
+</html>

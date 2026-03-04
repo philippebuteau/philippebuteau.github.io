@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+	
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio – Philippe Buteau</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: "Poppins", sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        header {
+            background: #111;
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 3rem;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.8;
+        }
+
+        nav {
+            background: #222;
+            padding: 10px;
+            text-align: center;
+        }
+
+        nav a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        section {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        h2 {
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 5px;
+        }
+
+        .projects {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .project {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .project img {
+            width: 100%;
+            border-radius: 5px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #111;
+            color: white;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+	<h2>Portfolio</h2>
+    <h1>Philippe Buteau</h1>
+    <p>Administrateur Réseau</p>
+</header>
+
+<nav>
+	<a href="../../index.html">Accueil</a>
+	<a href="../scripts.html">Page Précédente</a>
+    <a href="#Descriptif">Descriptif</a>
+    <a href="#Démonstration">Démonstration</a>
+    <a href="#contact">Contact</a>
+</nav>
+
+<section id="Descriptif">
+	<h1>Outil de segmentation de réseaux</h1>
+
+	<h2>Contexte</h2>
+		<p>Cet outil a été développé en Python afin d’automatiser un devoir réalisé dans le cadre d’un cours d’introduction aux réseaux.</p>
+		<p>L’exercice portait sur la segmentation VLSM et consistait à déterminer les adresses IPv4 d’une entreprise fictive. 
+		Le travail était particulièrement exigeant, puisqu’il fallait fournir l’ensemble des représentations binaires des adresses afin de justifier chaque étape du calcul.</p>
+
+	<h2>Mandat</h2>
+		<ul>
+		  <li>Créer un un outil en ligne de commande</li>
+		  <li>Deux options&nbsp;:
+			<ul>
+			  <li>Trouver toutes les adresses de réseau à partir d’une adresse IPv4 et d’un masque de sous-réseau
+				<ul>
+				  <li>Adresse de réseau</li>
+				  <li>Masque de sous-réseau</li>
+				  <li>Première adresse utilisable</li>
+				  <li>Dernière adresse utilisable</li>
+				  <li>Adresse de broadcast</li>
+				</ul>
+			  </li>
+			  <li>Calculer une segmentation VLSM à partir d’une adresse IPv4 de base et des besoins en hôtes
+				<ul>
+				  <li>Doit arrondir les valeurs fournies pour les besoins en hôtes à la puissance de 2 supérieure</li>
+				  <li>Doit trier les valeurs fournies afin de commencer les calculs par le plus grand réseau</li>
+				  <li>Doit produire à la fois les versions binaires et décimales pointées de toutes les adresses</li>
+				  <li>Doit mettre en évidence les parties réseau/hôte dans la présentation des adresses binaires</li>
+				  <li>Doit pouvoir exporter le résultat dans un fichier lisible par Excel</li>
+				</ul>
+			  </li>
+			</ul>
+		  </li>
+		</ul>
+
+
+	<h2>Résumé de la solution</h2>
+	<ul>
+	  <li><h3>Script Python :</h3></li>
+		<ul>
+			<li>Ensemble de fonctions pour effectuer les calculs nécessaires à la segmentation VLSM</li>
+			<ul>
+				<li>Traduction d’un masque de sous-réseau en notation /XX</li>
+				<li>Opération de « ET logique » avec le masque de sous-réseau</li>
+				<li>Opération pour trouver l’adresse de diffusion</li>
+				<li>Opération pour déterminer la première et la dernière adresse utilisable</li>
+				<li>Opération pour demander à l’utilisateur la liste de ses besoins en adresses IP</li>
+				<li>Opération pour arrondir les besoins en adresses IP à la puissance de 2 supérieure</li>
+				<li>Opération pour classer les besoins du plus grand au plus petit pour un calcul VLSM adéquat</li>
+				<li>Opérations de formatage des données pour l’affichage</li>
+			</ul>
+		</ul>
+</section>
+
+<section id="Démonstration">
+	<h2>Démonstration :</h2>
+	<div style="text-align: center;">
+	  <video controls width="640">
+		<source src="VLSMcalc_demo.mp4" type="video/mp4">
+		Votre navigateur ne supporte pas la lecture vidéo.
+	  </video>
+	</div>
+</section>
+
+
+<section id="contact">
+    <h2>Contact</h2>
+    <p>📧 p.buteau@hotmail.ca</p>
+    <p>🔗 <a href="https://www.linkedin.com/in/philippe-buteau-7a0274110" target="_blank">LinkedIn</a></p>
+</section>
+
+<footer>
+    © 2026 Philippe Buteau – Tous droits réservés
+</footer>
+
+</body>
+</html>

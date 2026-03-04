@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+	
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio – Philippe Buteau</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: "Poppins", sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        header {
+            background: #111;
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 3rem;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.8;
+        }
+
+        nav {
+            background: #222;
+            padding: 10px;
+            text-align: center;
+        }
+
+        nav a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        section {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        h2 {
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 5px;
+        }
+
+        .projects {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .project {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .project img {
+            width: 100%;
+            border-radius: 5px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #111;
+            color: white;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+	<h2>Portfolio</h2>
+    <h1>Philippe Buteau</h1>
+    <p>Administrateur Réseau</p>
+</header>
+
+<nav>
+	<a href="../../index.html">Accueil</a>
+	<a href="../scripts.html">Page Précédente</a>
+    <a href="#Descriptif">Descriptif</a>
+    <a href="#Démonstration">Démonstration</a>
+    <a href="#contact">Contact</a>
+</nav>
+
+<section id="Descriptif">
+	<h1>Outil de mise en miroir de disque externe</h1>
+
+	<h2>Contexte</h2>
+	<p>L’une des choses qui m’a frappé lorsque j’ai commencé mes cours en gestion de réseaux est un processus informatique qui efface toutes les données 
+	des étudiants de façon quotidienne. Aucune forme de données ne peut etre sauvegardé sur mon compte utilisateur de l’école.</p>
+	<p>En tant qu’étudiant en informatique, la majorité de mes travaux sont réalisés sur un ordinateur. 
+	Ces travaux génèrent des fichiers et ces derniers doivent être enregistrés et organisés. </p>
+	<p>Puisque rien ne peut être conservé à l’école, cette organisation de fichiers doit être faite sur mon ordinateur à la maison. 
+	En conséquence, je dois souvent apporter des données à l’école et les ramener chez moi en utilisant un disque externe.</p>
+	<p>Je dois ensuite régulièrement mettre à jour mon ordinateur personnel et mon disque externe avec de nouveaux projets
+	provenant soit de la maison, soit de l’école. 
+	À mesure que le nombre de projets augmente, ce processus manuel devient long et sujet aux erreurs. D'autant plus que
+	mon disque externe est un disque magnétique, donc lent, ce qui élimine l'option de simplement travailler depuis le disque externe.</p><p>
+	Les étapes suivantes décrivent la solution que j’ai trouvée pour automatiser ce processus.</p>
+	<p>(Cette solution à éventuellement été remplacée par une connexion en VPN en utilisant
+	mon cellulaire comme hotspot. Ce tunnel openVPN me permet maintant de
+	me connecter à mon ordinateur de bureau chez moi à l'aide de l'application RustDesk)</p>
+	<h2>Mandat</h2>
+		<ul>
+		  <li>Avoir accès aux données les plus récentes aux deux endroits (maison et école) en utilisant le disque externe pour le transport</li>
+		  <li>Avoir la capacité de définir des dossiers favoris afin d’éviter de dupliquer des données inutilement</li>
+		  <li>Cette configuration de favoris devrait être enregistrable</li>
+		  <li>La configuration d'une liste noire devrait aussi être possible pour permettre l'omission de certains éléments</li>
+		  <li>Disposer d’un processus rapide et simple pour mettre les données à jour</li>
+		  <li>Structurer le projet de manière à avoir un script qui effectue la mise en miroir de A et B,
+			  dans lequel A et B sont définis dans un fichier de configuration séparé. De cette façon, un outil
+			  central peut être utilisé pour plusieurs tâches de transfert de données différentes.</li>
+		  <li>Par conséquent, le script principal doit être capable de gérer une liste de paires A–B.</li>
+		  <li>Le script doit être utilisable sous Windows et Linux</li>
+		</ul>
+
+	<h2>Résumé de la solution</h2>
+	<ul>
+	  <li><h3>Script PowerShell :</h3></li>
+		<ul>
+			<li>Analyse le contenu d’un fichier JSON pour en extraire les favoris</li>
+			<li>Ces favoris sont organisés par paires, soit un emplacement source et une destination</li>
+			<li>Le script collecte les données des fichiers enfants des deux répertoires et en crée un objet</li>
+			<li>Cet inventaire montre à l’utilisateur les fichiers manquants et les fichiers modifiés</li>
+			<li>Chaque fichier se voit attribuer un statut et une action qui sera exécutée par le script après confirmation</li>
+			<li>Une fois confirmé, les fichiers désuets sont mis à jour et les fichiers manquants sont copiés</li>
+			<li>Le script procède ainsi à une quantité minimale d’opérations tout en gardant les dossiers parfaitement identiques</li>
+			<li>En plus des favoris, il est possible d’inclure des emplacements dans une liste noire afin d’exclure certains éléments</li>
+			<li>Ce script principal offre la possibilité d’appeler un script secondaire permettant de modifier les favoris et la liste noire</li>
+			<li>Il est possible de lancer le script en mode automatique</li>
+		</ul>
+</section>
+
+<section id="Démonstration">
+	<h2>Démonstration :</h2>
+	<div style="text-align: center;">
+	  <video controls width="640">
+		<source src="ABmirror_demo.mp4" type="video/mp4">
+		Votre navigateur ne supporte pas la lecture vidéo.
+	  </video>
+	</div>
+</section>
+
+
+<section id="contact">
+    <h2>Contact</h2>
+    <p>📧 p.buteau@hotmail.ca</p>
+    <p>🔗 <a href="https://www.linkedin.com/in/philippe-buteau-7a0274110" target="_blank">LinkedIn</a></p>
+</section>
+
+<footer>
+    © 2026 Philippe Buteau – Tous droits réservés
+</footer>
+
+</body>
+</html>

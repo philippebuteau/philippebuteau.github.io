@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio – Philippe Buteau</title>
+    <style>
+        body {
+            margin: 0;
+			font-family: "Poppins", sans-serif;
+        }
+
+        header {
+            background: #111;
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 3rem;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.8;
+        }
+
+        nav {
+            background: #222;
+            padding: 10px;
+            text-align: center;
+        }
+
+        nav a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        section {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        h2 {
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 5px;
+        }
+
+        .projects {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .project {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .project img {
+            width: 100%;
+            border-radius: 5px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #111;
+            color: white;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+	<h2>Portfolio</h2>
+    <h1>Philippe Buteau</h1>
+    <p>Administrateur Réseau</p>
+</header>
+
+<nav>
+    <a href="#about">À propos</a>
+    <a href="#projects">Projets</a>
+    <a href="#contact">Contact</a>
+    <a href="autre/autre.html">Autre Accomplissements</a>
+</nav>
+
+<section id="about">
+    <h2>À propos</h2>
+    <p>
+        Ce répertoire comprend une série de projets personnels que j'ai développés avec la matière acquise dans le cadre d'un AEC en Gestion de Réseau, Sécurité et Virtualisation. 
+        Ces projets sont axés sur l'automatisation de processus et la création d'outils d'administration de systèmes et de réseaux.
+    </p>
+
+    <p>
+        Chaque projet est présenté avec :
+    </p>
+
+    <ul>
+        <li>un contexte justifiant la création du projet ;</li>
+        <li>une liste de critères à remplir ;</li>
+        <li>un résumé de la démarche, du résultat et des composantes clés.</li>
+    </ul>
+
+    <h2>Objectifs du répertoire</h2>
+
+    <p>
+        Mes objectifs dans l'élaboration de ce répertoire sont de documenter mes apprentissages au travers de projets concrets dans les domaines suivants :
+    </p>
+
+    <ul>
+        <li>Réseautique</li>
+        <li>Virtualisation</li>
+        <li>Automatisation</li>
+        <li>Administration de système
+            <ul>
+                <li>Linux</li>
+                <li>Windows</li>
+            </ul>
+        </li>
+        <li>Sécurité</li>
+        <li>Scripts
+            <ul>
+                <li>Python</li>
+                <li>Bash</li>
+                <li>Batch</li>
+                <li>PowerShell</li>
+            </ul>
+        </li>
+        <li>Méthodologie, raisonnement et résolution de problème</li>
+    </ul>
+</section>
+
+<section id="projects">
+    <h2>Projets</h2>
+    <div class="projects">
+		<a href="scripts/scripts.html" class="project" style="text-decoration:none; color:inherit;">
+			<img src="https://via.placeholder.com/400x250" alt="">
+			<h3>Scripts</h3>
+			<p>Scripts d’automatisation, gestion de systèmes, outils personnalisés.</p>
+		</a>
+		<a href="monLab/monLab.html" class="project" style="text-decoration:none; color:inherit;">
+			<img src="https://via.placeholder.com/400x250" alt="">
+			<h3>Mon Laboratoire</h3>
+			<p>Projet personnel</p>
+		</a>
+		<a href="serveurs/serveurs.html" class="project" style="text-decoration:none; color:inherit;">
+			<img src="https://via.placeholder.com/400x250" alt="">
+			<h3>Serveurs, Réseautique et Virtualisation</h3>
+			<p>Collection de court laboratoires</p>
+		</a>
+    </div>
+</section>
+
+<section id="contact">
+    <h2>Contact</h2>
+    <p>📧 p.buteau@hotmail.ca</p>
+    <p>🔗 <a href="https://www.linkedin.com/in/philippe-buteau-7a0274110" target="_blank">LinkedIn</a></p>
+</section>
+
+<footer>
+    © 2026 Philippe Buteau – Tous droits réservés
+</footer>
+
+</body>
+</html>

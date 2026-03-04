@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+	
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio – Philippe Buteau</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: "Poppins", sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        header {
+            background: #111;
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 3rem;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.8;
+        }
+
+        nav {
+            background: #222;
+            padding: 10px;
+            text-align: center;
+        }
+
+        nav a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        section {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        h2 {
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 5px;
+        }
+
+        .projects {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .project {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .project img {
+            width: 100%;
+            border-radius: 5px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #111;
+            color: white;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+	<h2>Portfolio</h2>
+    <h1>Philippe Buteau</h1>
+    <p>Administrateur Réseau</p>
+</header>
+
+<nav>
+	<a href="../../index.html">Accueil</a>
+	<a href="../scripts.html">Page Précédente</a>
+    <a href="#Descriptif">Descriptif</a>
+    <a href="#Démonstration">Démonstration</a>
+    <a href="#contact">Contact</a>
+</nav>
+
+<section id="Descriptif">
+	<h1>Outil de configuration de serveur linux</h1>
+
+	<h2>Contexte</h2>
+	<p>Toujours dans le cadre de mes cours, il est régulièrement nécéssaire de créer de nouvelles installations de systèmes d'opération linux, sur
+	lesquels nous configurons des services réseaux. Pour chaque nouvelle machine, la même configuration initiale est nécéssaire. Il faut configurer
+	le réseau pour que les machines communiquent entre elles, il faut configurer le pare-feu, selinux, installer les paquets, configurer le nom de la machine. Après
+	avoir fait tout ça, le travail abordé dans le cours concerné n'est même pas commencé, et il sera tout à recommencer lors du prochain laboratoire.</p>
+	<p>Certains services se cadrent aussi dans le même problème. Je pense au services DHCP et DNS particulièrement. Ils sont souvent à la base de d'autres 
+	procédures. C'est donc pour accélérer ces configurations multiple que je m'attaque à ce projet.</p>
+	<p>Sur linux, tout se configure en texte dans des fichiers spécifiques. Mon objectif est de construire une structure paramétrable pour rendre
+	tous ces services opérationnels en demandant à l'administrateur de répondre à quelques question dans un terminal. La réeussite de cet objectif
+	me permettra de sauver un temps fou pour me concentrer sur la nouvelle matière, et non sur ce que j'ai déjà fait des dizaines de fois.</p>
+	<p>Cet outil sera itératif et pourra être mis à jour régulièrement pour inclure mes nouveaux apprentissages.</p>
+
+	<h2>Mandat</h2>
+		<ul>
+		  <li>Créer un outil basé sur terminal permettant de configurer rapidement  une nouvelle machine avec :</li>
+		  <ul>
+			<li>Configuration Réseau</li>
+			<li>Configuration du pare-feu</li>
+			<li>Configuration de SELINUX</li>
+			<li>Configuration d'un serveur DHCP</li>
+			<li>Configuration d'un serveur DNS</li>
+			<li>Configuration d'un serveur NFS</li>
+			<li>Configuration d'un serveur LDAP</li>
+			<li>Configuration d'un serveur Web</li>
+			<li>Formattage d'un nouveau disque dur</li>
+			<li>Configuration de clés SSH</li>
+		  </ul>
+		</ul>
+
+<section id="Démonstration">
+	<h2>Démonstration : (à venir...)</h2>
+	<div style="text-align: center;">
+	  <video controls width="640">
+		<source src="builder_demo.mp4" type="video/mp4">
+		Votre navigateur ne supporte pas la lecture vidéo.
+	  </video>
+	</div>
+</section>
+
+
+<section id="contact">
+    <h2>Contact</h2>
+    <p>📧 p.buteau@hotmail.ca</p>
+    <p>🔗 <a href="https://www.linkedin.com/in/philippe-buteau-7a0274110" target="_blank">LinkedIn</a></p>
+</section>
+
+<footer>
+    © 2026 Philippe Buteau – Tous droits réservés
+</footer>
+
+</body>
+</html>

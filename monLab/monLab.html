@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+	
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio – Philippe Buteau</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: "Poppins", sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        header {
+            background: #111;
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 3rem;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.8;
+        }
+
+        nav {
+            background: #222;
+            padding: 10px;
+            text-align: center;
+        }
+
+        nav a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        section {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        h2 {
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 5px;
+        }
+        
+		#projects { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .projects {
+            display: grid;
+            gap: 20px;
+        }
+		#projects1 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .projects1 {
+            display: grid;
+            gap: 20px;
+        }
+		#projects2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .projects2 {
+            display: grid;
+            gap: 20px;
+        }
+
+        .project {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .project img {
+            width: 100%;
+            border-radius: 5px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #111;
+            color: white;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+	<h2>Portfolio</h2>
+    <h1>Philippe Buteau</h1>
+    <p>Administrateur Réseau</p>
+</header>
+
+<nav>
+	<a href="../index.html">Accueil</a>
+	<a href="../index.html">Page Précédente</a>
+    <a href="#Descriptif">Descriptif</a>
+    <a href="#Démonstration">Démonstration</a>
+    <a href="#contact">Contact</a>
+</nav>
+
+<section id="Descriptif">
+	<h1>Mon Laboratoire</h1>
+
+	<h2>Contexte</h2>
+	<p>Cette page vise à documenter un projet personnel que j'utilise pour 
+	approfondir la matière vue dans le cadre de mes cours.</p>
+	<p>Je réalise ce projet dans un environement entièrement virtualisé, 
+	en utilisant VMware Workstation Pro comme hyperviseur.</p>
+	<p>Mon approche pour cet exercice de synthèse est de simuler une infrastructure 
+	de petite entreprise.</p>
+		
+	<h2>Mandat</h2>
+		<ul>
+		  <li>Implémenter un serveur DHCP et DNS sous linux</li>
+		  <li>Installer un serveur de stockage avec un RAID</li>
+		  <li>Installer un firewall qui sera la porte vers internet</li>
+		  <li>Configurer un hyperviseur en cluster sur lequel il pourra y avoir des 
+		  machines clientes</li>
+		  <li>Configurer un systeme d'acces à distance aux machines clientes avec 
+		  VPN ou des 'thins clients'</li>
+		  <li>Faire un plan d'addressage avec segmentation VLSM</li>
+		  <li>Utiliser des VLAN dans le plan d'addressage</li>
+		  <li>Configurer un controleur de domaine</li>
+		  <li>Configurer un serveur de messagerie</li>
+		  <li>Configurer un serveur web</li>
+		</ul>
+
+</section>
+
+<div class="projects">
+	<a href="myLab.PNG" class="project" style="text-decoration:none; color:inherit;">
+		<h2>Topologie Logique</h2>
+			
+		<img src="myLab.PNG" alt="">
+	</a>
+</div>
+
+<section id="contact">
+    <h2>Contact</h2>
+    <p>📧 p.buteau@hotmail.ca</p>
+    <p>🔗 <a href="https://www.linkedin.com/in/philippe-buteau-7a0274110" target="_blank">LinkedIn</a></p>
+</section>
+
+<footer>
+    © 2026 Philippe Buteau – Tous droits réservés
+</footer>
+
+</body>
+</html>
