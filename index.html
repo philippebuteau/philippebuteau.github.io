@@ -1,180 +1,169 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-	
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio – Philippe Buteau</title>
-    <style>
-        body {
-            margin: 0;
-			font-family: "Poppins", sans-serif;
-        }
-
-        header {
-            background: #111;
-            color: white;
-            padding: 60px 20px;
-            text-align: center;
-        }
-
-        header h1 {
-            margin: 0;
-            font-size: 3rem;
-        }
-
-        header p {
-            font-size: 1.2rem;
-            opacity: 0.8;
-        }
-
-        nav {
-            background: #222;
-            padding: 10px;
-            text-align: center;
-        }
-
-        nav a {
-            color: white;
-            margin: 0 15px;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        section {
-            max-width: 900px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
-
-        h2 {
-            border-bottom: 2px solid #ddd;
-            padding-bottom: 5px;
-        }
-
-        .projects {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
-
-        .project {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .project img {
-            width: 100%;
-            border-radius: 5px;
-        }
-
-        footer {
-            text-align: center;
-            padding: 20px;
-            background: #111;
-            color: white;
-            margin-top: 40px;
-        }
-    </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio – Philippe Buteau</title>
+  <style>
+    :root { --cream:#f7f3ee; --paper:#ede8e0; --ink:#1a1714; --ink-light:#5a5550; --ink-faint:#a09890; --rust:#c0552a; --rust-light:#e8ddd7; --border:#d6cfc5; }
+    *{box-sizing:border-box;margin:0;padding:0} html{scroll-behavior:smooth}
+    body{background:var(--cream);color:var(--ink);font-family:'DM Sans',sans-serif;font-weight:300}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:20px 56px;background:rgba(247,243,238,0.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+    .nav-logo{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--ink)}
+    nav ul{list-style:none;display:flex;gap:36px}
+    nav ul a{color:var(--ink-light);text-decoration:none;font-size:0.82rem;font-weight:400;letter-spacing:0.07em;text-transform:uppercase;transition:color 0.2s}
+    nav ul a:hover{color:var(--rust)}
+    header{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;padding-top:64px}
+    .hero-left{padding:80px 56px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid var(--border)}
+    .hero-eyebrow{font-size:0.72rem;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--rust);margin-bottom:28px}
+    .hero-left h1{font-family:'Playfair Display',serif;font-size:clamp(3.5rem,6vw,6rem);font-weight:900;line-height:1.0;letter-spacing:-0.02em;color:var(--ink);margin-bottom:12px}
+    .hero-left h1 em{font-style:italic;color:var(--rust)}
+    .hero-divider{width:48px;height:2px;background:var(--rust);margin:32px 0}
+    .hero-desc{font-size:1rem;line-height:1.75;color:var(--ink-light);max-width:380px}
+    .hero-right{background:var(--paper);padding:80px 56px;display:flex;flex-direction:column;justify-content:flex-end}
+    .hero-right-label{font-size:0.68rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:40px}
+    .domain-list{list-style:none}
+    .domain-list li{display:flex;align-items:baseline;gap:16px;padding:18px 0;border-top:1px solid var(--border);font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:700;color:var(--ink);transition:color 0.2s,padding-left 0.2s;cursor:default}
+    .domain-list li:hover{color:var(--rust);padding-left:8px}
+    .domain-list li span{font-family:'DM Sans',sans-serif;font-size:0.65rem;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-faint);margin-left:auto}
+    .section-wrap{max-width:1100px;margin:0 auto;padding:100px 56px}
+    .section-label{display:flex;align-items:baseline;gap:16px;margin-bottom:56px}
+    .section-label .num{font-size:0.68rem;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--rust)}
+    .section-label h2{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;color:var(--ink);letter-spacing:-0.02em}
+    #about{border-top:1px solid var(--border)}
+    .about-columns{display:grid;grid-template-columns:1.4fr 1fr;gap:80px}
+    .about-columns p{font-size:1rem;line-height:1.85;color:var(--ink-light);margin-bottom:18px}
+    .about-columns p strong{color:var(--ink);font-weight:500}
+    .skills-block{border-top:2px solid var(--ink);padding-top:28px}
+    .skills-block h4{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;margin-bottom:20px;color:var(--ink)}
+    .tag-list{display:flex;flex-wrap:wrap;gap:8px}
+    .tag{padding:6px 14px;border:1px solid var(--border);font-size:0.75rem;color:var(--ink-light);background:var(--paper);border-radius:2px;transition:background 0.2s,color 0.2s,border-color 0.2s}
+    .tag:hover{background:var(--rust);color:white;border-color:var(--rust)}
+    #projects{background:var(--paper);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+    .project-row{display:grid;grid-template-columns:72px 1fr auto;align-items:center;gap:40px;padding:36px 0;border-top:1px solid var(--border);text-decoration:none;color:inherit}
+    .project-row:last-child{border-bottom:1px solid var(--border)}
+    .project-row:hover .proj-title{color:var(--rust)}
+    .project-row:hover .proj-arrow{transform:translateX(6px);color:var(--rust)}
+    .proj-num{font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:700;font-style:italic;color:var(--border);line-height:1}
+    .proj-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--ink);margin-bottom:6px;transition:color 0.2s}
+    .proj-desc{font-size:0.88rem;color:var(--ink-faint);line-height:1.6}
+    .proj-arrow{font-size:1.4rem;color:var(--border);transition:transform 0.25s,color 0.2s}
+    #contact{border-top:1px solid var(--border)}
+    .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
+    .contact-text h3{font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:900;line-height:1.1;margin-bottom:20px;letter-spacing:-0.02em}
+    .contact-text p{font-size:0.95rem;line-height:1.75;color:var(--ink-light)}
+    .contact-cards{display:flex;flex-direction:column;gap:16px;padding-top:8px}
+    .contact-card{display:flex;align-items:center;gap:20px;padding:24px 28px;background:var(--paper);border:1px solid var(--border);border-radius:4px;text-decoration:none;color:var(--ink);transition:border-color 0.2s,background 0.2s}
+    .contact-card:hover{border-color:var(--rust);background:var(--rust-light)}
+    .contact-card-label{font-size:0.63rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:4px}
+    .contact-card-value{font-size:0.93rem;color:var(--ink)}
+    footer{border-top:1px solid var(--border);padding:28px 56px;display:flex;justify-content:space-between;font-size:0.75rem;color:var(--ink-faint)}
+    footer em{font-family:'Playfair Display',serif;font-style:italic;color:var(--ink-light)}
+    .fade-up{opacity:0;transform:translateY(22px);animation:fadeUp 0.65s ease forwards}
+    @keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
+    .d1{animation-delay:.05s}.d2{animation-delay:.18s}.d3{animation-delay:.32s}.d4{animation-delay:.46s}
+    @media(max-width:860px){nav{padding:16px 24px}nav ul{gap:20px}header{grid-template-columns:1fr;min-height:auto}.hero-left{padding:60px 24px 40px;border-right:none;border-bottom:1px solid var(--border)}.hero-right{padding:40px 24px 60px}.section-wrap{padding:60px 24px}.about-columns,.contact-grid{grid-template-columns:1fr;gap:40px}.project-row{grid-template-columns:48px 1fr auto;gap:16px}footer{padding:24px;flex-direction:column;gap:8px}}
+  </style>
 </head>
-
 <body>
 
-<header>
-	<h2>Portfolio</h2>
-    <h1>Philippe Buteau</h1>
-    <p>Administrateur Réseau</p>
-</header>
-
 <nav>
-    <a href="#about">À propos</a>
-    <a href="#projects">Projets</a>
-    <a href="#contact">Contact</a>
-    <a href="autre/autre.html">Autre Accomplissements</a>
+  <div class="nav-logo">Philippe Buteau</div>
+  <ul>
+    <li><a href="#about">À propos</a></li>
+    <li><a href="#projects">Projets</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="autre/autre.html">Autres</a></li>
+  </ul>
 </nav>
 
+<header>
+  <div class="hero-left">
+    <p class="hero-eyebrow fade-up d1">Portfolio · 2026</p>
+    <h1 class="fade-up d2">Philippe<br><em>Buteau</em></h1>
+    <div class="hero-divider fade-up d3"></div>
+    <p class="hero-desc fade-up d4">Administrateur réseau passionné par l'automatisation, la sécurité et la virtualisation. Ce portfolio documente mes apprentissages au travers de projets concrets.</p>
+  </div>
+  <div class="hero-right fade-up d3">
+    <p class="hero-right-label">Domaines d'expertise</p>
+    <ul class="domain-list">
+      <li>Réseautique <span>Core</span></li>
+      <li>Virtualisation <span>Core</span></li>
+      <li>Sécurité <span>Core</span></li>
+      <li>Automatisation <span>Scripting</span></li>
+      <li>Administration sys. <span>Linux · Windows</span></li>
+    </ul>
+  </div>
+</header>
+
 <section id="about">
-    <h2>À propos</h2>
-    <p>
-        Ce répertoire comprend une série de projets personnels que j'ai développés avec la matière acquise dans le cadre d'un AEC en Gestion de Réseau, Sécurité et Virtualisation. 
-        Ces projets sont axés sur l'automatisation de processus et la création d'outils d'administration de systèmes et de réseaux.
-    </p>
-
-    <p>
-        Chaque projet est présenté avec :
-    </p>
-
-    <ul>
-        <li>un contexte justifiant la création du projet ;</li>
-        <li>une liste de critères à remplir ;</li>
-        <li>un résumé de la démarche, du résultat et des composantes clés.</li>
-    </ul>
-
-    <h2>Objectifs du répertoire</h2>
-
-    <p>
-        Mes objectifs dans l'élaboration de ce répertoire sont de documenter mes apprentissages au travers de projets concrets dans les domaines suivants :
-    </p>
-
-    <ul>
-        <li>Réseautique</li>
-        <li>Virtualisation</li>
-        <li>Automatisation</li>
-        <li>Administration de système
-            <ul>
-                <li>Linux</li>
-                <li>Windows</li>
-            </ul>
-        </li>
-        <li>Sécurité</li>
-        <li>Scripts
-            <ul>
-                <li>Python</li>
-                <li>Bash</li>
-                <li>Batch</li>
-                <li>PowerShell</li>
-            </ul>
-        </li>
-        <li>Méthodologie, raisonnement et résolution de problème</li>
-    </ul>
+  <div class="section-wrap">
+    <div class="section-label"><span class="num">01</span><h2>À propos</h2></div>
+    <div class="about-columns">
+      <div>
+        <p>Ce répertoire comprend une série de projets personnels développés avec la matière acquise dans le cadre d'un <strong>AEC en Gestion de Réseau, Sécurité et Virtualisation</strong>.</p>
+        <p>Ces projets sont axés sur l'automatisation de processus et la création d'outils d'administration de systèmes et de réseaux. Chaque projet est présenté avec un contexte, une liste de critères, et un résumé de la démarche.</p>
+        <p>Mon objectif est de documenter mes apprentissages au travers de projets concrets qui reflètent ce que je peux réellement accomplir.</p>
+      </div>
+      <div>
+        <div class="skills-block">
+          <h4>Technologies &amp; outils</h4>
+          <div class="tag-list">
+            <span class="tag">Python</span><span class="tag">Bash</span><span class="tag">PowerShell</span><span class="tag">Batch</span><span class="tag">Linux</span><span class="tag">Windows Server</span><span class="tag">VMware</span><span class="tag">Pare-feu</span><span class="tag">VLANs</span><span class="tag">DNS / DHCP</span><span class="tag">Active Directory</span><span class="tag">SSH</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
 <section id="projects">
-    <h2>Projets</h2>
-    <div class="projects">
-		<a href="scripts/scripts.html" class="project" style="text-decoration:none; color:inherit;">
-			<img src="https://via.placeholder.com/400x250" alt="">
-			<h3>Scripts</h3>
-			<p>Scripts d’automatisation, gestion de systèmes, outils personnalisés.</p>
-		</a>
-		<a href="monLab/monLab.html" class="project" style="text-decoration:none; color:inherit;">
-			<img src="https://via.placeholder.com/400x250" alt="">
-			<h3>Mon Laboratoire</h3>
-			<p>Projet personnel</p>
-		</a>
-		<a href="serveurs/serveurs.html" class="project" style="text-decoration:none; color:inherit;">
-			<img src="https://via.placeholder.com/400x250" alt="">
-			<h3>Serveurs, Réseautique et Virtualisation</h3>
-			<p>Collection de court laboratoires</p>
-		</a>
+  <div class="section-wrap">
+    <div class="section-label"><span class="num">02</span><h2>Projets</h2></div>
+    <div>
+      <a href="scripts/scripts.html" class="project-row">
+        <div class="proj-num">01</div>
+        <div><div class="proj-title">Scripts</div><div class="proj-desc">Scripts d'automatisation, gestion de systèmes et outils personnalisés en Python, Bash, Batch et PowerShell.</div></div>
+        <div class="proj-arrow">→</div>
+      </a>
+      <a href="monLab/monLab.html" class="project-row">
+        <div class="proj-num">02</div>
+        <div><div class="proj-title">Mon Laboratoire</div><div class="proj-desc">Projet personnel d'infrastructure, de configuration et d'expérimentation en environnement contrôlé.</div></div>
+        <div class="proj-arrow">→</div>
+      </a>
+      <a href="serveurs/serveurs.html" class="project-row">
+        <div class="proj-num">03</div>
+        <div><div class="proj-title">Serveurs, Réseautique &amp; Virtualisation</div><div class="proj-desc">Collection de courts laboratoires sur les serveurs, la réseautique et la virtualisation.</div></div>
+        <div class="proj-arrow">→</div>
+      </a>
+      <a href="autre/autre.html" class="project-row">
+        <div class="proj-num">04</div>
+        <div><div class="proj-title">Autres Accomplissements</div><div class="proj-desc">Carrière en post-production cinématographique et autres réalisations.</div></div>
+        <div class="proj-arrow">→</div>
+      </a>
     </div>
+  </div>
 </section>
 
 <section id="contact">
-    <h2>Contact</h2>
-    <p>📧 p.buteau@hotmail.ca</p>
-    <p>🔗 <a href="https://www.linkedin.com/in/philippe-buteau-7a0274110" target="_blank">LinkedIn</a></p>
+  <div class="section-wrap">
+    <div class="section-label"><span class="num">03</span><h2>Contact</h2></div>
+    <div class="contact-grid">
+      <div class="contact-text">
+        <h3>Discutons de votre projet.</h3>
+        <p>N'hésitez pas à me contacter par courriel ou LinkedIn. Je suis ouvert aux opportunités en administration réseau, sécurité et automatisation.</p>
+      </div>
+      <div class="contact-cards">
+        <a href="mailto:p.buteau@hotmail.ca" class="contact-card"><div>✉</div><div><div class="contact-card-label">Courriel</div><div class="contact-card-value">p.buteau@hotmail.ca</div></div></a>
+        <a href="https://www.linkedin.com/in/philippe-buteau-7a0274110" target="_blank" class="contact-card"><div>↗</div><div><div class="contact-card-label">LinkedIn</div><div class="contact-card-value">philippe-buteau-7a0274110</div></div></a>
+      </div>
+    </div>
+  </div>
 </section>
 
-<footer>
-    © 2026 Philippe Buteau – Tous droits réservés
-</footer>
-
+<footer><em>Philippe Buteau</em><span>© 2026 — Tous droits réservés</span></footer>
 </body>
 </html>
