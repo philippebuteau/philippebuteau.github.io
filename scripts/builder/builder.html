@@ -109,7 +109,28 @@
     </div>
   </div>
 
+  <div class="block fade-up d3">
+    <div class="block-title">Code source : Script Bash</div>
+    <div style="background:#1a1714; border-radius:4px; overflow:auto; padding:28px 32px;">
+      <pre style="margin:0; font-family:'Courier New',monospace; font-size:0.82rem; line-height:1.7; color:#ede8e0; white-space:pre;"><code id="bash-code"></code></pre>
+    </div>
+  </div>
+
 </div>
+
+<script>
+  fetch('builder.sh')
+    .then(response => {
+      if (!response.ok) throw new Error('Fichier introuvable');
+      return response.text();
+    })
+    .then(text => {
+      document.getElementById('bash-code').textContent = text;
+    })
+    .catch(err => {
+      document.getElementById('bash-code').textContent = '// Erreur : ' + err.message;
+    });
+</script>
 
 <div class="contact-strip">
   <div class="contact-inner">

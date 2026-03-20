@@ -101,6 +101,300 @@
 
 </div>
 
+<div class="block fade-up d3" style="margin: 0 auto 52px; max-width: 1100px; padding: 0 56px;">
+  <div class="block-title">Code source : Script Python</div>
+  <div style="background:#1a1714; border-radius:4px; overflow:auto; padding:28px 32px;">
+    <pre style="margin:0; font-family:'Courier New',monospace; font-size:0.82rem; line-height:1.7; color:#ede8e0; white-space:pre;"><code>
+import os
+import subprocess
+from PIL import Image, ImageDraw, ImageFont
+import psutil
+import platform
+from datetime import datetime
+import distro
+import ctypes
+
+if os.name == "nt":
+    iswin = True
+elif os.name == "posix":
+    iswin = False
+
+def get_system_info():
+    info = {}
+    #---CPU---#
+    if iswin == True:
+        result = subprocess.run("wmic cpu get Name", shell=True, capture_output=True, text=True)
+        lines = [line.strip() for line in result.stdout.splitlines() if line.strip()]
+        cpu_name = lines[1] if len(lines) > 1 else "Unknown"
+    else:
+        result = subprocess.run(["lscpu"], capture_output=True, text=True)
+        for line in result.stdout.splitlines():
+            if "Model name" in line:
+                cpu_name = line.split(":", 1)[1].strip()
+                
+    info["cpu"] = {
+        "model": cpu_name,
+        "physical_cores": psutil.cpu_count(logical=False),
+        "logical_cores": psutil.cpu_count(logical=True),
+        "frequency": psutil.cpu_freq()._asdict() if psutil.cpu_freq() else None,
+        "usage_per_core": psutil.cpu_percent(percpu=True),
+        "total_usage": psutil.cpu_percent()
+        }
+    
+    #---GPU---#
+    if iswin == True:
+        cmd = "wmic path win32_VideoController get Name"
+        result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+        lines = [line.strip() for line in result.stdout.splitlines() if line.strip()]
+        gpu_name = lines[1] if len(lines) > 1 else "Unknown"
+    else:
+        cmd = "lspci | grep -i 'vga\\|3d\\|display'"
+        gpu_name = subprocess.run(cmd, shell=True, capture_output=True, text=True).stdout.strip()
+
+    info["gpu"] = {
+        "name": gpu_name
+        }
+    
+    #---Memory---#
+    mem = psutil.virtual_memory()
+    info["memory"] = {
+        "total": round(mem.total / 1024 / 1024),
+        "available": round(mem.available / 1024 / 1024),
+        "used": round(mem.used / 1024 / 1024),
+        "percent": mem.percent
+    }
+    
+    #---Storage---#
+    if iswin == True:
+        result = subprocess.run("wmic diskdrive get Model", shell=True, capture_output=True, text=True)
+        info["disk_name"] = []
+        lines = [l.strip() for l in result.stdout.splitlines() if l.strip()]
+        for line in lines:
+            if line != "Model":
+                info["disk_name"].append(line)
+    else:
+        diskinfo = subprocess.run(["lsblk", "-J", "-o", "NAME,MODEL,SIZE,TYPE,MOUNTPOINT"], capture_output=True, text=True)
+        info["disk_name"] = []
+        for line in diskinfo.stdout.splitlines():
+            if "model" in line:
+                if "null" not in line:
+                    info["disk_name"].append(line.split(":", 1)[1].strip().replace('"', '').replace(',', ''))
+                    
+    info["storage"] = []
+    for part in psutil.disk_partitions():
+        try:
+            usage = psutil.disk_usage(part.mountpoint)
+            info["storage"].append({
+                "device": part.device,
+                "mountpoint": part.mountpoint,
+                "fstype": part.fstype,
+                "total": usage.total,
+                "used": usage.used,
+                "free": usage.free,
+                "percent": usage.percent
+            })
+        except PermissionError:
+            continue
+    
+    #---Network---#
+    #ip
+    if iswin == True:
+        cmd = 'ipconfig | findstr /i "IPv4"'
+    else:
+        cmd = "nmcli | grep inet4"
+    ipv4 = subprocess.run(cmd, shell=True, capture_output=True, text=True).stdout.strip()
+    
+    info["network"] = {
+        "ipv4": ipv4
+        }
+    
+    #---OS---#
+    if iswin == True:
+        os_name = platform.system()
+        os_version = platform.release()
+        os_id = platform.version()
+        hostname = subprocess.run("echo $HOSTNAME", shell=True, capture_output=True, text=True).stdout.strip()
+        user = subprocess.run("echo $USER", shell=True, capture_output=True, text=True).stdout.strip()
+        shell = "None"
+        sessiondesktop = "None"
+        sessiontype = "None"
+        
+    else:
+        os_name = distro.name()
+        os_version = distro.version()
+        os_id = distro.id()
+        hostname = subprocess.run("echo $HOSTNAME", shell=True, capture_output=True, text=True).stdout.strip()
+        user = subprocess.run("echo $USER", shell=True, capture_output=True, text=True).stdout.strip()
+        shell = subprocess.run("echo $SHELL", shell=True, capture_output=True, text=True).stdout.strip()
+        sessiondesktop = subprocess.run("echo $XDG_SESSION_DESKTOP", shell=True, capture_output=True, text=True).stdout.strip()
+        sessiontype = subprocess.run("echo $XDG_SESSION_TYPE", shell=True, capture_output=True, text=True).stdout.strip()
+        
+    info["os"] = {
+        "os_name": os_name,
+        "os_version": os_version,
+        "os_id": os_id,
+        "hostname": hostname,
+        "user": user,
+        "shell": shell,
+        "sessiondesktop": sessiondesktop,
+        "sessiontype": sessiontype
+        }
+    
+    #---USB---#
+    if iswin == True:
+        info["usb"] = [{"usb_name": "N/A"}]
+    else:
+        usbinfo = subprocess.run(["lsusb", "-v"], capture_output=True, text=True)
+        info["usb"] = []
+        for line in usbinfo.stdout.splitlines():
+            if "idProduct" in line:
+                    info["usb"].append({
+                    "name": line.split("idProduct", 1)[1].strip()
+                    })
+    
+    #---Time---#
+    time = datetime.now()
+    formatted_time = time.strftime("%Y-%m-%d %H:%M")
+    info["time"] = {"datetime": formatted_time} 
+    
+    return info
+
+def format_system_info(info):
+    lines = []
+    #Date
+    lines.append(f"{info['time']['datetime']}")
+    lines.append("")
+    
+    # General info
+    lines.append(f"Software Info: ")
+    lines.append(f"OS: {info['os']['os_name']} {info['os']['os_version']}")
+    if iswin == False:
+        #lines.append(f"Session: {info['os']['sessiondesktop']} | {info['os']['sessiontype']}")
+        lines.append(f"Host: {info['os']['user']}@{info['os']['hostname']}")
+        #lines.append(f"Shell: {info['os']['shell']}")
+    lines.append("")
+    
+    lines.append(f"Hardware Info: ")
+    lines.append(f"CPU Model: {info['cpu']['model']}")
+    lines.append(f"CPU Cores: {info['cpu']['physical_cores']}")
+    lines.append(f"CPU Logical Cores: {info['cpu']['logical_cores']}")
+    lines.append(f"GPU Model: {info['gpu']['name']}")
+    lines.append(f"RAM: {str(round(int(info['memory']['total']) / 1024))} GB")
+
+    for index, item in enumerate(info['disk_name']):
+        lines.append(f"DISK{index}: {item}")
+    lines.append("")
+
+    for index, item in enumerate(info['usb']):
+        lines.append(f"USB{index}: {item["usb_name"]}")
+    lines.append("")
+
+    # IP
+    lines.append(f"IP: ")
+    lines.append(f"{info['network']['ipv4']}")
+
+    lines.append("")
+    lines.append(f"Ressources Usage Info:")
+
+    # CPU
+    cpu = info["cpu"]
+    lines.append(f"CPU: {cpu['frequency']['current']:.0f} MHz ({cpu['total_usage']}%)")
+
+    # Memory
+    mem = info["memory"]
+    lines.append(f"RAM: {mem['used']} / {mem['total']} MB ({mem['percent']}%)")
+
+    # Storage (only show root filesystem)
+    lines.append("Disks:") 
+    for d in info["storage"]: 
+        total_gb = d["total"] // (1024**3) 
+        used_gb = d["used"] // (1024**3) 
+        lines.append( 
+        f"  {d['device']} ({d['mountpoint']}): " 
+        f"  {used_gb}/{total_gb} GB ({d['percent']}%)" 
+        )
+    
+    return "\n".join(lines)
+
+system_info = get_system_info()
+#print(system_info)
+result = format_system_info(system_info)
+#print(result)
+
+#Base image
+width, height = 2880, 1800
+img = Image.new("RGB", (width, height), color=(100, 137, 154))
+draw = ImageDraw.Draw(img)
+
+#Font
+if iswin == True:
+    font = ImageFont.truetype(r"C:\Windows\Fonts\arial.ttf", 18)
+else:
+    font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf", 22)
+
+#Text block size
+lines = result.splitlines()
+max_line_width = 0
+line_height = (font.getbbox("A")[3] - font.getbbox("A")[1]) * 2
+
+for line in lines:
+    w = draw.textlength(line, font=font)
+    if w > max_line_width:
+        max_line_width = w
+
+text_block_width = max_line_width
+text_block_height = line_height * len(lines)
+
+#padding from bottom-right corner
+padding = 200
+x = width - text_block_width - padding
+y = height - text_block_height - padding
+
+#background rectangle
+bg_margin = 50
+bg_x0 = x - bg_margin
+bg_y0 = y - bg_margin
+bg_x1 = width - padding + bg_margin
+bg_y1 = height - padding + bg_margin
+draw.rectangle([bg_x0, bg_y0, bg_x1, bg_y1], fill=(97,129,148))
+
+#write text
+for i, line in enumerate(lines):
+    draw.text((x, y + i * line_height), line, font=font, fill=(164,190,205))
+
+#Save image
+if iswin == True:
+    myscripts = os.getenv("MYSCRIPTS")
+    image_path = f"{myscripts}" + r"\Packages\wallpaper\bg.png" 
+    img.save(image_path)
+    ctypes.windll.user32.SystemParametersInfoW(20, 0, image_path, 3) 
+else:
+    home = os.getenv("HOME")
+    image_path = f"{home}/Documents/Scripts/wallpaper/bg.png" 
+    img.save(image_path)
+    subprocess.run([ "gsettings", "set", "org.gnome.desktop.background", "picture-uri", f"file://{image_path}" ]) 
+    subprocess.run([ "gsettings", "set", "org.gnome.desktop.background", "picture-uri-dark", f"file://{image_path}" ])
+
+    </code></pre>
+  </div>
+</div>
+
+<div class="block fade-up d3" style="margin: 0 auto 52px; max-width: 1100px; padding: 0 56px;">
+  <div class="block-title">Code source : installation scripts</div>
+  <div style="background:#1a1714; border-radius:4px; overflow:auto; padding:28px 32px;">
+    <pre style="margin:0; font-family:'Courier New',monospace; font-size:0.82rem; line-height:1.7; color:#ede8e0; white-space:pre;"><code>
+#!/bin/bash
+
+sudo dnf install pip -y
+pip install pillow
+pip install psutil
+
+( crontab -l 2>/dev/null; echo "* * * * * /usr/bin/python $HOME/Documents/scripts/wallpaper/wallpaper.py" ) | crontab -
+crontab -l
+    </code></pre>
+  </div>
+</div>
+
 <div class="contact-strip">
   <div class="contact-inner">
     <h3>Me contacter</h3>
