@@ -117,6 +117,384 @@
   </div>
 
 </div>
+<div class="block fade-up d3" style="margin: 0 auto 52px; max-width: 1100px; padding: 0 56px;">
+  <div class="block-title">Code source : Script PowerShell</div>
+  <div style="background:#1a1714; border-radius:4px; overflow:auto; padding:28px 32px;">
+    <pre style="margin:0; font-family:'Courier New',monospace; font-size:0.82rem; line-height:1.7; color:#ede8e0; white-space:pre;"><code>
+
+#============================================================================================
+# Titre       : Mirroir A, A'
+# Auteur      : Philippe Buteau
+#============================================================================================ 
+# Description : 
+# À partir du concept du script exemple Explorateur de fichiers,
+# le script suivant est un outil pour faire un backup "intelligent" entre
+# un dossier racine A et un dossier racine A'.
+ 
+# Compare deux répertoires et enregistre les informations de chaque emplacement dans un objet.
+
+# Une fois cette analyse complète, le processus suivant s'exécute :
+#    -Les fichiers uniquement dans A sont copiés dans A',
+#    -Les fichiers uniquement dans A' sont copiés dans A, 
+#    -Les fichiers modifiés dans A sont mis à jour dans A',
+#    -Les fichiers modifiés dans A' sont mis à jour dans A,
+
+# Les fichiers sont donc maintenus à jour dans les deux répertoires.
+
+# Le script est concu pour iterer sur une liste (favoris.json) de repertoires A-A'
+# Une option peut-etre selectionne pour modifier les favoris
+
+# Pour definir une nouvelle paire de favoris, une paire de racines (racines.json) est utilisee;
+#	Exemple:
+# 		racineA: /A
+#		racineB: /B/C
+#		nouveau favoris A: /A/a/b/c (entree de l'utilisateur)
+#		nouveau favoris A': /B/C/a/b/c (genere automatiquement en remplacant racineA par racineB dans le nouveau favoris A)
+
+# Une blacklist (blacklist.json) est utilisee pour specifier des fichiers a omettre ou supprimer
+
+#============================================================================================
+
+#============================================================================================
+# Configuration des paires d'emplacements racines (source / destination) et de l'emplacement des fichiers externes
+#============================================================================================
+$jsonpath5 = "$env:ABmirror/config/current_config.json"
+$current_config = Get-Content -Raw -Path $jsonpath5 | ConvertFrom-Json
+Write-Host "Launched with configuration: $current_config"
+
+$log = "$env:ABmirror/logs/logs.txt"
+$jsonpath = "$env:ABmirror/config/$current_config/favoris.json"
+$jsonpath2 = "$env:ABmirror/config/$current_config/blacklist.json"
+$jsonpath3 = "$env:ABmirror/config/$current_config/racines.json"
+$jsonpath4 = "$env:ABmirror/config/$current_config/options.json"
+
+# Vérification du json1 (favoris)
+if (-not (Test-Path $jsonpath)){
+    New-Item -Path $jsonpath -ItemType File | Out-Null
+    Write-Warning "L'emplacement $jsonpath était manquant, il a donc été créé."
+    $defaut = @"
+{
+    "0": "Source",
+    "1": "Destination"
+}   
+"@
+    Set-Content -Path $jsonpath -Value $defaut
+}
+
+# Vérification du json2 (blacklist)
+if (-not (Test-Path $jsonpath2)){
+    New-Item -Path $jsonpath2 -ItemType File | Out-Null
+    Write-Warning "L'emplacement $jsonpath2 était manquant, il a donc été créé." 
+    Set-Content -Path $jsonpath2 -Value "[]"
+}
+
+# Vérification du json3 (racines)
+if (-not (Test-Path $jsonpath3)){
+    New-Item -Path $jsonpath3 -ItemType File | Out-Null
+    Write-Warning "L'emplacement $jsonpath3 était manquant, il a donc été créé."
+    $defaut = @"
+{
+    "0": "Source",
+    "1": "Destination"
+}   
+"@
+    Set-Content -Path $jsonpath3 -Value $defaut
+}
+
+# Vérification du json4 (options)
+if (-not (Test-Path $jsonpath4)){
+    New-Item -Path $jsonpath4 -ItemType File | Out-Null
+    Write-Warning "L'emplacement $jsonpath4 était manquant, il a donc été créé."
+    $defaut = @"
+{
+  "dryrun": false,
+  "silent": false,
+  "dodelete": false,
+  "auto": false
+} 
+"@
+    Set-Content -Path $jsonpath4 -Value $defaut
+}
+
+# Lecture des options
+$run_options = Get-Content -Path $jsonpath4 | ConvertFrom-Json
+$dryrun = $run_options.dryrun
+$silent = $run_options.silent
+$dodelete = $run_options.dodelete
+$auto = $run_options.auto
+
+
+# Vérification du log
+if (-not (Test-Path $log)){
+    New-Item -Path $log -ItemType File | Out-Null
+    Write-Warning "L'emplacement $log était manquant, il a donc été créé." 
+    Set-Content -Path $log -Value "Fichier log"
+}
+
+
+# Modification des favoris
+if ($auto -eq $False){
+	$modify = Read-Host "`nVoulez-vous modifier la liste des favoris? (y/N)"
+} else { $modify = "N" }
+if ($modify -in "y", "Y"){
+    & "$env:ABmirror/favoris.ps1" $jsonpath $jsonpath2 $jsonpath3
+}
+
+# Lecture des favoris
+$list = Get-Content -Raw -Path $jsonpath | ConvertFrom-Json
+$racines = [ordered]@{}
+foreach ($item in $list.psobject.Properties) {
+    if ([int]$item.Name -gt 1){
+        $key = [int]$item.Name
+        $racines.Add($key, $item.Value)
+    }
+}
+
+# Lecture de la liste noire
+$blacklist = Get-Content -Raw -Path $jsonpath2 | ConvertFrom-Json
+$fullBlacklist = @($blacklist)
+
+#$childs = New-Object System.Collections.Generic.List[object]
+#foreach ($i in $blacklist) {
+#    try {
+#        foreach ($c in Get-ChildItem -Path $i -Recurse -Force) {
+#	    $childs.Add($c.FullName)
+#        }
+#    } catch {
+#        $childs.Add($i)
+#    }
+#}
+#$fullBlacklist = $childs
+#Write-Host "Done compiling blacklist items."
+
+#============================================================================================
+# Configuration des listes d'actions et de statuts
+# Initialisation des listes infos et inventaires
+#============================================================================================
+$Actions = @("Copié de A vers A' ", "Copié de A' vers A  ", "option désuette", "Update de A' vers A  ", "Aucune  ", "Delete")
+$Statuts = @("Inexistant dans A' ", "Inexistant dans A  ", "Modifié dans A' ", "Modifié dans A  ", "À jour  ", "Désuet", "Répertoire", "Blacklist")
+$inventaires = @{}
+$infos = @{}
+
+#============================================================================================
+# FONCTION pour analyser le contenu de d'un emplacement et retourner un objet personnalisé
+#  Représentant les informations de chaque emplacement, le statut par rapport au backup et
+#  l'action a prendre.
+#============================================================================================
+function Get-mirrorImage {
+    param (
+        [int]$key,
+        [string]$path,
+        [hashtable]$inventaires,
+        [hashtable]$racines,
+        [array]$Statuts,
+        [array]$Actions,
+        [int]$direction,
+        [bool]$birectionnel
+    )
+    foreach ($j in $inventaires[$key].GetEnumerator()) {
+    
+        # Vérification de l'existence d'un backup de l'objet courant 
+        $reflection = $j.FullName.Replace($racines[$key], $racines[$key + $direction])
+        $testItem = Test-Path $reflection         
+        if ($testItem -eq $True -and $j.FullName) {
+                
+            # Stockage de l'objet représentant le backup de l'objet courant    
+            $reflection_objet = Get-Item -Path $reflection -ErrorAction SilentlyContinue
+
+            # Si le backup est plus récent que l'objet courant
+            if ($reflection_objet.LastWriteTime -gt $j.LastWriteTime) {
+                $Statut = $Statuts[2]
+                $Action = $Actions[3]
+            # Si l'objet courant est plus récent que le backup
+            } elseif ($reflection_objet.LastWriteTime -lt $j.LastWriteTime) {
+                $Statut = $Statuts[5]
+                $Action = $Actions[4]
+            # Si les deux objets ont la même date de modification
+            } else {
+                $Statut = $Statuts[4]
+                $Action = $Actions[4]                    
+            }
+	    # Si la reflection de l'objet courant est sur la liste noire
+	    foreach ($item in $fullBlacklist){
+		if ($reflection_object){
+	            if ($reflection_objet.FullName.StartsWith($item)){
+                        $Statut = $Statuts[7]
+                        $Action = $Actions[4]
+	            }
+		}
+	    }    
+        # Si le backup de l'objet courant n'existe pas
+        } elseif ($testItem -eq $False) {
+            $Statut = $Statuts[0]
+            $Action = $Actions[0]
+        }
+        # Si l'objet courant est un répertoire
+        if ($j.PSIsContainer){
+            $Statut = $Statuts[6]
+            $Action = $Actions[4]          
+        }
+	# Si l'objet courant est sur la liste noire
+	foreach ($item in $fullBlacklist){
+	    if ($j.FullName.StartsWith($item)){
+                $Statut = $Statuts[7]
+                $Action = $Actions[4]
+	    }
+	}    
+               
+        $infos[$j.FullName] = [PSCustomObject]@{
+            FullNameA = $j.FullName
+            FullNameB = $reflection
+            LengthA = "$([math]::Round($j.Length / 1KB, 2)) KB"
+            LengthB = if ($testItem) { "$([math]::Round($reflection_objet.Length / 1KB, 2)) KB" } else { "N/a" }
+            ModA = $j.LastWriteTime
+            ModB = if ($testItem) { $reflection_objet.LastWriteTime } else { "        N/a   " }
+            Statut = $Statut
+            Action = $Action
+        }
+    }
+    return $infos
+}
+
+#============================================================================================
+# FONCTION pour créer les répertoires manquants
+#============================================================================================
+function Create-Parents {
+    param (
+        [string]$cheminFichier
+    )
+    $dossierParent = Split-Path $cheminFichier -Parent
+    if (-not (Test-Path $dossierParent) -and $dossierParent) {
+        Write-Warning "L'emplacement $($dossierParent) était manquant, il a donc été créé."
+        New-Item -ItemType Directory -Path $dossierParent -Force | Out-Null
+    }
+}
+
+#============================================================================================
+# Création des racines manquantes
+#============================================================================================
+foreach ($i in $racines.GetEnumerator()) {
+    Create-Parents -cheminFichier $i.Value
+}
+
+#============================================================================================
+# Bloc de script pour itérer au travers des paires d'emplacements racine en executant la
+# fonction Get-mirrorImage
+#============================================================================================
+foreach ($i in $racines.GetEnumerator()) {
+
+    # Dans chaque racine, stockage des objets enfants de façon récursive
+    
+    $inventaires[$i.Key] = @(Get-ChildItem -Path $i.Value -Recurse -Force)
+
+    # Si l'itération courante est un emplacement source
+    if ($i.Key % 2 -eq 0) {      
+        # Pour chaque objet de l'inventaire de la racine courante
+        $infos[$i.Key] = Get-mirrorImage -key $i.Key -path $i.Value -inventaires $inventaires -racines $racines -Statuts $Statuts -Actions $Actions -direction 1
+    } else {
+        # Pour chaque objet de l'inventaire de la racine courante
+        $infos[$i.Key] = Get-mirrorImage -key $i.Key -path $i.Value -inventaires $inventaires -racines $racines -Statuts $Statuts -Actions $Actions -direction -1
+    }
+}
+
+#============================================================================================
+# Affichage des données récoltées pour confirmation
+#============================================================================================
+foreach ($item in $racines.GetEnumerator()){
+
+#    if ($item.Key % 2 -eq 0) {
+#        Write-Host "`nAnalyse depuis l'emplacement A: " -ForegroundColor Green -NoNewline
+#        Write-Host "$($racines[$item.Key])"
+
+#    } else {
+#        Write-Host "`nAnalyse depuis l'emplacement A': " -ForegroundColor Cyan -NoNewline
+#        Write-Host "$($racines[$item.Key])"    
+#    }
+}
+if ($silent -eq $False){
+    Write-Host "`nRésultats de l'analyse: " -ForegroundColor Yellow
+}
+# Affiche les infos : fichierA ou A' doit exister - Le Statut ne doit pas être "désuet" - Les entrées sont triées par noms -
+try {
+    $tableau = $infos[$item.key].Values | Where-Object { $_.FullNameA -or $_.FullNameB } | Where-Object { $_.Statut -ne $Statuts[5]} | Sort-Object FullNameA | Format-Table Statut, Action, FullNameA, LengthA, ModA, FullNameB, LengthB, ModB
+}
+catch {
+    Write-Warning "Aucun emplacement valide n'a été trouvé dans le fichier favoris.json; Aucune action ne sera prise"
+    exit
+}
+if ($silent -eq $False){
+    $tableau
+}
+
+# logs
+Get-Date >> $log
+#$racines[$item.Key] >> $log
+#$tableau >> $log
+    
+# Confirmation
+if (($auto -eq $False) -and ($dryrun -eq $False)){
+    Write-Host "Souhaitez-vous aller de l'avant avec les actions représentées dans le tableau ci-dessus? (Y/n)" -ForegroundColor Yellow
+    $confirmation = Read-Host
+}
+
+if ((-not $confirmation) -or ($confirmation -in "y", "Y") -and ($dryrun -eq $False)) { 
+
+    foreach ($item in $racines.GetEnumerator()){
+
+        #============================================================================================
+        # Mirroir des emplacements A et A'
+        #============================================================================================
+        foreach ($i in $infos[$item.key].GetEnumerator()) {
+            
+            # Suppression sous confirmation des éléments répertoriés dans la liste noire
+            if (($i.Value.Statut -eq $statuts[7]) -and ($dodelete -eq $True)){
+                if (Test-Path $i.Value.FullNameA){
+                    Write-Host "Suppression de : $($i.Value.FullNameA)"
+                    Remove-Item -Path $i.Value.FullNameA -Recurse -Force
+                } 
+                if (Test-Path $i.Value.FullNameB){
+                    Write-Host "Suppression de : $($i.Value.FullNameB)"
+                    Remove-Item -Path $i.Value.FullNameB -Recurse -Force
+                } 
+            }
+
+            if ($i.Value.Action -eq $actions[0] -or $i.Value.Action -eq $actions[2]){
+                
+                Create-Parents -cheminFichier $i.Value.FullNameB
+                
+		Write-Host "$($i.Value.Action) -> $($i.Value.FullNameA) -> $($i.Value.FullNameB)"
+		Copy-Item -Path $i.Value.FullNameA -Destination $i.Value.FullNameB -Force -ErrorAction SilentlyContinue
+                "ACTION: $($i.Value.Action) -> $($i.Value.FullNameA) -> $($i.Value.FullNameB)" >> $log
+		                
+		# Update les Statuts et Actions de l'item pour ne pas copier l'item de nouveau lors de l'image mirroir
+                $i.Value.Action = $Actions[4]
+                $i.Value.Statut = $Statuts[4]
+        
+            } elseif ($i.Value.Action -eq $actions[1] -or $i.Value.Action -eq $actions[3]) {
+
+                Create-Parents -cheminFichier $i.Value.FullNameA
+                Write-Host "$($i.Value.Action) -> $($i.Value.FullNameB) -> $($i.Value.FullNameA)"
+                Copy-Item -Path $i.Value.FullNameB -Destination $i.Value.FullNameA -Force
+                "ACTION: $($i.Value.Action) -> $($i.Value.FullNameB) -> $($i.Value.FullNameA)" >> $log
+
+                # Update les Statuts et Actions de l'item
+                $i.Value.Action = $Actions[4]
+                $i.Value.Statut = $Statuts[4]
+            }
+        }
+    }
+    Write-Host "`nOpération Terminée." -ForegroundColor Green
+} else {
+	if ($dryrun -eq $True){
+		Read-Host "`nDry Run completed. Press Enter to quit"
+	} else {
+		Write-Host "`nOpération annulée par l'utilisateur; Aucune action n'a été prise." -ForegroundColor Red
+    }
+}
+
+    </code></pre>
+  </div>
+</div>
 
 <div class="contact-strip">
   <div class="contact-inner">
