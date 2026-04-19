@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Configuration TCP/IP – Philippe Buteau</title>
+  <style>
+    :root{--cream:#f7f3ee;--paper:#ede8e0;--ink:#1a1714;--ink-light:#5a5550;--ink-faint:#a09890;--rust:#c0552a;--rust-light:#e8ddd7;--border:#d6cfc5}
+    *{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+    body{background:var(--cream);color:var(--ink);font-family:'DM Sans',sans-serif;font-weight:300}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:20px 56px;background:rgba(247,243,238,0.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+    .nav-logo{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--ink);text-decoration:none}
+    nav ul{list-style:none;display:flex;gap:32px}
+    nav ul a{color:var(--ink-light);text-decoration:none;font-size:0.82rem;font-weight:400;letter-spacing:0.07em;text-transform:uppercase;transition:color 0.2s}
+    nav ul a:hover{color:var(--rust)}
+    .page-header{padding:130px 56px 56px;border-bottom:1px solid var(--border);max-width:1100px;margin:0 auto}
+    .breadcrumb{font-size:0.72rem;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:20px}
+    .breadcrumb a{color:var(--ink-faint);text-decoration:none;transition:color 0.2s}
+    .breadcrumb a:hover{color:var(--rust)}
+    .breadcrumb span{margin:0 8px;color:var(--border)}
+    .page-header h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3.8rem);font-weight:900;line-height:1.05;letter-spacing:-0.02em;color:var(--ink)}
+    .page-header h1 em{font-style:italic;color:var(--rust)}
+    .page-header .subtitle{margin-top:16px;font-size:0.95rem;color:var(--ink-faint);line-height:1.6}
+    .tag-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+    .tag{padding:5px 13px;border:1px solid var(--border);font-size:0.75rem;color:var(--ink-light);background:var(--paper);border-radius:2px}
+    .content-wrap{max-width:1100px;margin:0 auto;padding:64px 56px 100px}
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:60px;margin-bottom:52px}
+    .block{margin-bottom:52px}
+    .block-title{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;color:var(--ink);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+    .block p{font-size:0.97rem;line-height:1.85;color:var(--ink-light);margin-bottom:14px}
+    .block p strong{color:var(--ink);font-weight:500}
+    .block ul{padding-left:20px}
+    .block ul li{font-size:0.95rem;line-height:1.8;color:var(--ink-light);margin-bottom:6px}
+    .img-card{background:var(--paper);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+    .img-card img{width:100%;display:block}
+    .img-card-label{padding:16px 20px;font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--ink);border-top:1px solid var(--border)}
+    .demo-wrap{background:var(--paper);border:1px solid var(--border);border-radius:4px;padding:32px;text-align:center}
+    .demo-wrap video{max-width:100%;border-radius:2px}
+    .coming-soon{font-family:'Playfair Display',serif;font-style:italic;color:var(--ink-faint);font-size:0.95rem;padding:20px 0}
+    .contact-strip{border-top:1px solid var(--border);padding:56px}
+    .contact-inner{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:40px}
+    .contact-inner h3{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900}
+    .contact-links{display:flex;gap:16px}
+    .contact-link{display:flex;align-items:center;gap:12px;padding:14px 22px;background:var(--paper);border:1px solid var(--border);border-radius:4px;text-decoration:none;color:var(--ink);font-size:0.88rem;transition:border-color 0.2s,background 0.2s}
+    .contact-link:hover{border-color:var(--rust);background:var(--rust-light)}
+    footer{border-top:1px solid var(--border);padding:24px 56px;display:flex;justify-content:space-between;font-size:0.75rem;color:var(--ink-faint)}
+    footer em{font-family:'Playfair Display',serif;font-style:italic;color:var(--ink-light)}
+    .fade-up{opacity:0;transform:translateY(20px);animation:fadeUp 0.6s ease forwards}
+    @keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
+    .d1{animation-delay:.05s}.d2{animation-delay:.18s}.d3{animation-delay:.3s}
+    @media(max-width:760px){nav{padding:16px 20px}nav ul{gap:16px}.page-header{padding:100px 24px 40px}.content-wrap{padding:40px 24px 60px}.two-col{grid-template-columns:1fr}.contact-strip{padding:40px 24px}.contact-inner{flex-direction:column;align-items:flex-start}.contact-links{flex-direction:column}footer{padding:20px 24px;flex-direction:column;gap:6px}}
+	.code-block {
+	  background: #1a1714;
+	  border-radius: 4px;
+	  overflow: auto;
+	  padding: 28px 32px;
+	}
+	.code-block pre {
+	  margin: 0;
+	  font-family: 'Courier New', monospace;
+	  font-size: 0.82rem;
+	  line-height: 1.7;
+	  color: #ede8e0;
+	  white-space: pre;
+	} 
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="../../index.html">Philippe Buteau</a>
+  <ul>
+    <li><a href="../../index.html">Accueil</a></li>
+    <li><a href="../scripts.html">Scripts</a></li>
+  </ul>
+</nav>
+
+<div class="page-header fade-up d1">
+  <div class="breadcrumb"><a href="../../index.html">Accueil</a><span>/</span><a href="../scripts.html">Scripts</a><span>/</span>Configuration TCP/IP</div>
+  <h1>Configuration TCP/IP<br>sous linux</em></h1>
+  <p class="subtitle">Script bash pour automatiser la configuration des interfaces réseau sous linux/</p>
+  <div class="tag-list">
+    <span class="tag">Réseautique</span><span class="tag">bash</span><span class="tag">VLAN</span><span class="tag">BOND</span><span class="tag">Adressage</span>
+  </div>
+</div>
+
+<div class="content-wrap">
+
+  <div class="two-col fade-up d2">
+    <div class="block">
+      <div class="block-title">Contexte</div>
+      <p>Conception d'un script paramétrable pour configurer les interfaces réseaux sous linux</p>
+    </div>
+    <div class="block">
+      <div class="block-title">Fonctionnalités</div>
+      <ul>
+        <li>Configuration IPv4 de base</li>
+        <li>Configuration d'interfaces en VLAN</li>
+        <li>Configuration d'interface en mode BOND (Plusieurs interfaces logiquement agrégées)</li>
+        <li>Affichage de la configuration actuelle</li>
+        <li>Supprimer la configuration d'une interface</li>
+        <li>Supprimer la configuration de toutes les interfaces</li>
+        <li>Configurer automatiquement toutes les interfaces depuis mariadb</li>
+      </ul>
+    </div>
+  </div>
+
+	<div class="block fade-up d3">
+	  <div class="block-title">Fonctions: Configuration d'un profil ethernet, vlan ou bonded</div>
+	  <p></p>
+	  <div class="code-block">
+		<pre><code id="bash-code">
+function setup-ethernet-profile() {
+	ACTIVE=$(nmcli connection show | sed -n "/${INTERFACES[$i]}/ p")
+	if [[ -z $ACTIVE ]]; then
+		nmcli connection add type ethernet ifname ${INTERFACES[$i]} con-name ${INTERFACES[$i]}
+	fi
+}
+function setup-vlan-profile() {
+	if [[ -z $AUTO ]]; then
+		echo -e "${BOLD}Enter VLAN id (Number): ${RESET}"
+		read VLANID
+		echo -e "${BOLD}Enter VLAN ip address (xxx.xxx.xxx.xxx/xx): ${RESET}"
+		read IP
+		echo -e "${BOLD}Enter VLAN gateway (Press ENTER to skip): ${RESET}"
+		read GW
+		echo -e "${BOLD}Enter VLAN DNS (Press ENTER to skip): ${RESET}"
+		read DNS
+	fi
+	if [[ -n $GW && $GW != "NULL" ]]; then
+		nmcli connection add type vlan con-name ${INTERFACES[$i]}.${VLANID} dev ${INTERFACES[$i]} id $VLANID ip4 $IP gw4 $GW	
+	else
+		nmcli connection add type vlan con-name ${INTERFACES[$i]}.${VLANID} dev ${INTERFACES[$i]} id $VLANID ip4 $IP
+	fi
+
+	if [[ -n $DNS && $DNS != "NULL" ]]; then
+		nmcli connection modify "${INTERFACES[$i]}.${VLANID}" ipv4.dns $DNS
+	fi
+	INTERFACES[$i]=${INTERFACES[$i]}.${VLANID}
+}
+function setup-bonded-profile() {
+	if [[ -z $AUTO ]]; then
+		echo -e "${BOLD}Enter bond name: ${RESET}"
+		read NAME
+		echo "Bond modes: balance-rr, active-backup, 802.3ad, balance-xor, broadcast, balance-tlb, balance-alb"
+		echo -e "${BOLD}Enter the mode of the bond: ${RESET}"
+		read MODE
+		echo -e "${BOLD}Enter the number of slaves for this bond: ${RESET}"
+		read SLAVES
+	fi
+	if [[ -z $SLAVES ]]; then
+		SLAVES=1
+	fi
+	nmcli connection add type bond con-name $NAME ifname $NAME mode $MODE
+	SLAVENAME="${INTERFACES[$i]}.$NAME"
+	nmcli connection add type bond-slave con-name $SLAVENAME-slave$NUM ifname ${INTERFACES[$i]} master $NAME
+	INTERFACES[$i]=$NAME
+}
+function remove-profile() {
+	nmcli
+	echo ""
+	echo -e "${BOLD}Enter interface to remove: ${RESET}"
+	read NAME
+	nmcli connection delete $NAME
+	menu
+}
+function wipe-profiles() {
+	mapfile -t UUIDS - -(nmcli connection show | gawk -F" " '$1 != "lo" && $1 != "NAME"  {print $2}')
+	for UUID in ${UUIDS[@]}; do
+		nmcli connection delete $UUID
+	done
+}
+		</code></pre>
+	  </div>
+	</div>
+	
+	<div class="block fade-up d3">
+	  <div class="block-title">Fonctions: Configuration TCP/IP de base</div>
+	  <p>Méthode auto/statique, adresse IP, passerelle par défaut, serveurs DNS, nom de l'interface</p>
+	  <div class="code-block">
+		<pre><code id="bash-code">
+function query-method() {
+	if [[ -z $AUTO ]]; then
+		echo -e "${BOLD}Enter ipv4 method (static ; auto): ${RESET}"
+		read METHOD
+	fi
+}
+function setup-method() {
+	if [[ $METHOD == "static" || $METHOD == "auto" ]]; then
+		nmcli connection modify ${INTERFACES[$i]} ipv4.method $METHOD
+	fi
+}
+function setup-address() {
+	if [[ -z $AUTO ]]; then
+		echo -e "${BOLD}Enter ipv4 address/mask (ENTER to skip): ${RESET}"
+		read IP
+	fi
+	if [[ -n $IP ]]; then
+		nmcli connection modify ${INTERFACES[$i]} ipv4.address ${IP}
+	fi	
+}
+function setup-gateway() {
+	if [[ -z $AUTO ]]; then	
+		echo -e "${BOLD}Enter default gateway (ENTER to skip): ${RESET}"
+		read GW
+	fi
+	if [[ -n $GW && $GW != "NULL" ]]; then
+		nmcli connection modify ${INTERFACES[$i]} ipv4.gateway $GW
+	fi	
+}
+function setup-dns() {
+	if [[ -z $AUTO ]]; then	
+		echo -e "${BOLD}Enter dns address (Comma separated list) (ENTER to skip): ${RESET}"
+		read DNS
+	fi
+	if [[ -n $DNS && $DNS != "NULL" ]]; then
+		nmcli connection modify ${INTERFACES[$i]} ipv4.dns $DNS
+	fi	
+}
+function append-dns() {
+	CURRENT=$(nmcli -g ipv4.dns connection show ${INTERFACES[$i]})
+	echo -e "${BOLD}Current dns servers: ${RESET}\n$CURRENT"
+	echo ""
+	echo -e "${BOLD}Enter dns address (Comma separated list) (ENTER to skip): ${RESET}"
+	read DNS
+	if [[ -n $DNS ]]; then
+		nmcli connection modify ${INTERFACES[$i]} ipv4.dns "${CURRENT},${DNS}"
+	fi	
+}
+function activate-interface(){
+	nmcli connection up ${INTERFACES[$i]}
+}
+function change-device-name(){
+	if [[ -z $AUTO ]]; then
+		echo -e "${BOLD}Enter the new name for this device (ENTER to skip): ${RESET}"
+		read NAME
+	fi
+	if [[ -n $NAME ]]; then
+		nmcli connection modify ${INTERFACES[$i]} con-name $NAME
+	fi
+	INTERFACES[$i]=$NAME
+}
+		</code></pre>
+	  </div>
+	</div>	
+	
+	<div class="block fade-up d3">
+	  <div class="block-title">Fonctions: Récupération des informations sur les interfaces</div>
+	  <p>Ces informations sont utilisées par les autres fonctions, elles permettent de choisir les interfaces à configurer</p>
+	  <div class="code-block">
+		<pre><code id="bash-code">
+function get-info() {
+	mapfile -t INTERFACES - -(nmcli | grep connected | gawk -F" " '$4 != "lo" && $4 != "to" && NF >= 4 { print $4 }')
+	mapfile -t -O "${#INTERFACES[@]}" INTERFACES - -(nmcli | grep disconnected | gawk -F":" '$1 != "lo" { print $1 }')
+	mapfile -t ADDRESSES - -(nmcli | grep inet4 | gawk -F" " '$2 != "127.0.0.1/8" { print $2 }' | gawk -F"/" '{ print $1 }')
+	mapfile -t MASKS - -(nmcli | grep inet4 | gawk -F" " '$2 != "127.0.0.1/8" { print $2 }' | gawk -F"/" '{ print $2 }')
+	echo ""
+	echo -e "${BOLD}Connected interfaces: ${RESET}"
+	# Display
+	for i in "${!INTERFACES[@]}"; do
+		echo "${i}) ${INTERFACES[$i]} : ${ADDRESSES[$i]}/${MASKS[$i]}"
+	done
+	echo ""
+}
+		</code></pre>
+	  </div>
+	</div>
+	
+	<div class="block fade-up d3">
+	  <div class="block-title">Fonctions: Séquences d'action</div>
+	  <p>Séquences de fonctions pour accomplir différentes tâches</p>
+	  <div class="code-block">
+		<pre><code id="bash-code">
+function action-sequence-setIP() {
+	setup-ethernet-profile
+	query-method
+	if [[ $METHOD == "static" ]]; then
+		setup-address
+		setup-gateway
+		setup-dns
+		setup-method
+	elif [[ $METHOD == "auto" ]]; then
+		setup-method
+	fi
+	activate-interface
+}
+function action-sequence-vlan() {
+	setup-vlan-profile
+	activate-interface
+}
+function action-sequence-name() {
+	change-device-name
+	activate-interface
+}
+function action-sequence-bond() {
+	NUM=1
+	setup-bonded-profile
+	action-sequence-setIP
+	for NUM in $(seq 2 $SLAVES); do
+		process addto-bonded-profile
+	done
+}
+		</code></pre>
+	  </div>
+	</div>	
+	
+	<div class="block fade-up d3">
+	  <div class="block-title">Fonctions: Process</div>
+	  <p>Ces fonctions sont conçue pour itérerer sur les interfaces disponibles. Elles attendent l'une des séquences d'actions précédentes comme argument</p>
+	  <p>Le mode normal est fait pour opérer sur une interface interactivement sélectionnée par l'utilisateur. Le mode automatique itère sur toutes les interfaces</p>
+	  <div class="code-block">
+		<pre><code id="bash-code">
+function process() {
+	get-info
+	echo -e "${BOLD}Select an interface to modify: ${RESET}"
+	read CHOICE
+	for i in "${!INTERFACES[@]}"; do
+		if [[ "$i" -eq "$CHOICE" ]]; then
+			# Run parameter function $1
+			$1
+		fi
+	done
+}
+function process-auto() {
+	for i in "${INTERFACES[@]}"; do
+		if [[ "$i" == "$KEY" ]]; then
+			INTERFACES[$i]=$KEY
+			# Run parameter function $1
+			$1
+		fi
+	done
+}
+		</code></pre>
+	  </div>
+	</div>	
+
+	<div class="block fade-up d3">
+	  <div class="block-title">Fonctions: Interaction avec mariadb</div>
+	  <p>Ces fonctions permettent l'automatisation de la configuration via une base de données</p>
+	  <div class="code-block">
+		<pre><code id="bash-code">
+function extract-from-database() {
+	wipe-profiles
+	get-info
+	mapfile -t KEYS - -(mysql networkInterfaces -B -N -e "SELECT device FROM NIC")
+	# Regular ehternet interface
+	for KEY in "${KEYS[@]}"; do
+		AUTO=1
+		IP=$(mysql -e "USE networkInterfaces; SELECT GROUP_CONCAT(ipv4) FROM address
+			JOIN NIC ON address.deviceID = NIC.deviceID
+			WHERE NIC.device = '$KEY';" -B -N)
+		GW=$(mysql -e "USE networkInterfaces; SELECT GROUP_CONCAT(gateway) FROM address
+			JOIN NIC ON address.deviceID = NIC.deviceID
+			WHERE NIC.device = '$KEY';" -B -N)
+		DNS=$(mysql -e "USE networkInterfaces; SELECT GROUP_CONCAT(dns) FROM address
+			JOIN NIC ON address.deviceID = NIC.deviceID
+			WHERE NIC.device = '$KEY';" -B -N)
+		METHOD=$(mysql -e "USE networkInterfaces; SELECT method FROM NIC WHERE device = '$KEY';" -B -N)
+		PROFILE=$(mysql -e "USE networkInterfaces; SELECT profile FROM NIC WHERE device = '$KEY';" -B -N)
+		mapfile -t VLANIDS - -(mysql -e "USE networkInterfaces; SELECT vlanTAG FROM vlan
+										JOIN NIC ON vlan.deviceID = NIC.deviceID
+										WHERE NIC.device = '$KEY';" -B -N)
+		if [[ "$PROFILE" == "ethernet" ]]; then
+			echo -e "${BOLD}$KEY:$IP:$GW:$DNS:$METHOD:$PROFILE${RESET}"
+			process-auto action-sequence-setIP		
+		# VLAN interface
+		elif [[ "$PROFILE" == "vlan" ]]; then
+			for VLANID in ${VLANIDS[@]}; do
+				IP=$(mysql -e "USE networkInterfaces; SELECT address.ipv4 FROM NIC
+					JOIN vlan ON NIC.deviceID = vlan.deviceID
+					JOIN address ON address.addressID = vlan.addressID
+					WHERE NIC.device = '$KEY' AND vlan.vlanTAG = '$VLANID';" -B -N)
+				GW=$(mysql -e "USE networkInterfaces; SELECT address.gateway FROM NIC
+					JOIN vlan ON NIC.deviceID = vlan.deviceID
+					JOIN address ON address.addressID = vlan.addressID
+					WHERE NIC.device = '$KEY' AND vlan.vlanTAG = '$VLANID';" -B -N)
+				DNS=$(mysql -e "USE networkInterfaces; SELECT address.dns FROM NIC
+					JOIN vlan ON NIC.deviceID = vlan.deviceID
+					JOIN address ON address.addressID = vlan.addressID
+					WHERE NIC.device = '$KEY' AND vlan.vlanTAG = '$VLANID';" -B -N)
+				METHOD=$(mysql -e "USE networkInterfaces; SELECT method FROM NIC WHERE device = '$KEY';" -B -N)
+				echo -e "${BOLD}$KEY:$IP:$GW:$DNS:$METHOD:$PROFILE:$VLANID${RESET}"
+				process-auto action-sequence-vlan
+			done
+		# Bonded interfaces
+		elif [[ "$PROFILE" == "bond" ]]; then
+			IP=$(mysql -e "USE networkInterfaces; SELECT address.ipv4 FROM NIC
+				JOIN bond ON NIC.deviceID = bond.deviceID
+				JOIN address ON address.addressID = bond.addressID
+				WHERE NIC.device = '$KEY';" -B -N)
+			GW=$(mysql -e "USE networkInterfaces; SELECT address.gateway FROM NIC
+				JOIN bond ON NIC.deviceID = bond.deviceID
+				JOIN address ON address.addressID = bond.addressID
+				WHERE NIC.device = '$KEY';" -B -N)
+			DNS=$(mysql -e "USE networkInterfaces; SELECT address.dns FROM NIC
+				JOIN bond ON NIC.deviceID = bond.deviceID
+				JOIN address ON address.addressID = bond.addressID
+				WHERE NIC.device = '$KEY';" -B -N)
+			METHOD=$(mysql -e "USE networkInterfaces; SELECT method FROM NIC WHERE device = '$KEY';" -B -N)
+			NAME=$(mysql -e "USE networkInterfaces; SELECT bondTAG FROM bond
+				JOIN NIC ON NIC.deviceID = bond.deviceID
+				WHERE NIC.device = '$KEY';" -B -N)
+			ISMASTER=$(mysql -e "USE networkInterfaces; SELECT ismaster FROM bond
+				JOIN NIC ON NIC.deviceID = bond.deviceID
+				WHERE NIC.device = '$KEY';" -B -N)
+			NUM=$(mysql -e "USE networkInterfaces; SELECT slaveNUM FROM bond
+				JOIN NIC ON NIC.deviceID = bond.deviceID
+				WHERE NIC.device = '$KEY';" -B -N)
+			MODE=$(mysql -e "USE networkInterfaces; SELECT mode FROM bond
+				JOIN NIC ON NIC.deviceID = bond.deviceID
+				WHERE NIC.device = '$KEY';" -B -N)
+			INTERFACES[$i]=$KEY
+			echo -e "${BOLD}$KEY:$NAME:$MODE:$ISMASTER:$SLAVENUM:$IP:$GW:$DNS:$METHOD:$PROFILE:$VLANID${RESET}"
+			if [[ $ISMASTER == "TRUE" ]]; then
+				setup-bonded-profile
+				action-sequence-setIP
+			else
+				addto-bonded-profile
+			fi
+		fi
+		unset AUTO
+	done
+	echo -e "${BOLD}Press ENTER to continue${RESET}"
+	read "VOID"
+	menu
+}
+function display_database() {
+	echo ""
+	echo -e "${BOLD}Table: NIC${RESET}"
+	mysql -e "USE networkInterfaces; SELECT * FROM NIC;"
+	echo -e "${BOLD}Table: address${RESET}"
+	mysql -e "USE networkInterfaces; SELECT * FROM address;"
+	echo -e "${BOLD}Table: vlan${RESET}"
+	mysql -e "USE networkInterfaces; SELECT * FROM vlan;"
+	echo -e "${BOLD}Table: bond${RESET}"
+	mysql -e "USE networkInterfaces; SELECT * FROM bond;"
+	echo ""
+}
+		</code></pre>
+	  </div>
+	</div>
+
+	<div class="block fade-up d3">
+	  <div class="block-title">Fonctions: Menu</div>
+	  <p>Menu interactif pour l'exécution</p>
+	  <div class="code-block">
+		<pre><code id="bash-code">
+function menu() {
+	clear
+	echo -e "${BOLD}	Network Manager	${RESET}"
+	cat -- EOF
+0)....Display interfaces
+1)....Change device name
+2)....Setup networking for an interface
+3)....Append DNS server
+4)....Remove profile (Delete interface configuration)
+5)....Remove all profiles
+6)....Setup VLAN on interface
+7)....Setup bonded interfaces
+8)....Automated from database info
+9)....Display infos from database
+
+Q)....Quit	
+EOF
+	echo -e "${BOLD}Choose an action from the menu: ${RESET}"
+	read INPUT
+	case $INPUT in
+		0) clear;get-info;echo -e "${BOLD}Press ENTER to continue${RESET}";read VOID;menu;;
+		1) clear;process action-sequence-name; unset INPUT;echo -e "${BOLD}Press ENTER to continue${RESET}";read VOID;menu;;
+		2) clear;process action-sequence-setIP; unset INPUT;echo -e "${BOLD}Press ENTER to continue${RESET}";read VOID;menu;;
+		3) clear;process append-dns; unset INPUT;echo -e "${BOLD}Press ENTER to continue${RESET}";read VOID;menu;;
+		4) clear;remove-profile;unset INPUT;;
+		5) clear;wipe-profiles;unset INPUT;echo -e "${BOLD}Press ENTER to continue${RESET}";read VOID;menu;;
+		6) clear;process action-sequence-vlan; unset INPUT;echo -e "${BOLD}Press ENTER to continue${RESET}";read VOID;menu;;
+		7) clear;process action-sequence-bond; unset INPUT;echo -e "${BOLD}Press ENTER to continue${RESET}";read VOID;menu;;
+		8) clear;extract-from-database;unset INPUT;;
+		9) clear;display_database;unset INPUT;echo -e "${BOLD}Press ENTER to continue${RESET}";read VOID;menu;;
+		[qQ]) exit;;
+	esac
+}
+		</code></pre>
+	  </div>
+	</div>
+
+<div class="contact-strip">
+  <div class="contact-inner">
+    <h3>Me contacter</h3>
+    <div class="contact-links">
+      <a href="mailto:p.buteau@hotmail.ca" class="contact-link">✉ &nbsp;p.buteau@hotmail.ca</a>
+      <a href="https://www.linkedin.com/in/philippe-buteau-7a0274110" target="_blank" class="contact-link">↗ &nbsp;LinkedIn</a>
+    </div>
+  </div>
+</div>
+
+<footer><em>Philippe Buteau</em><span>© 2026 — Tous droits réservés</span></footer>
+</body>
+</html>
