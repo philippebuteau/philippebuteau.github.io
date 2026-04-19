@@ -5,7 +5,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Serveurs – Philippe Buteau</title>
+  <title>Scripts – Philippe Buteau</title>
   <style>
     :root{--cream:#f7f3ee;--paper:#ede8e0;--ink:#1a1714;--ink-light:#5a5550;--ink-faint:#a09890;--rust:#c0552a;--rust-light:#e8ddd7;--border:#d6cfc5}
     *{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
@@ -24,9 +24,15 @@
     .page-header h1 em{font-style:italic;color:var(--rust)}
     .page-header .subtitle{margin-top:16px;font-size:0.95rem;color:var(--ink-faint);line-height:1.6}
     .content-wrap{max-width:1100px;margin:0 auto;padding:64px 56px 100px}
-    .coming-card{background:var(--paper);border:1px solid var(--border);border-radius:4px;padding:56px 40px;text-align:center}
-    .coming-card h3{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;font-style:italic;color:var(--ink-faint);margin-bottom:12px}
-    .coming-card p{font-size:0.9rem;color:var(--ink-faint);line-height:1.6}
+    .project-row{display:grid;grid-template-columns:72px 1fr auto;align-items:center;gap:40px;padding:36px 0;border-top:1px solid var(--border);text-decoration:none;color:inherit}
+    .project-row:last-child{border-bottom:1px solid var(--border)}
+    .project-row:hover .proj-title{color:var(--rust)}
+    .project-row:hover .proj-arrow{transform:translateX(6px);color:var(--rust)}
+    .proj-num{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:700;font-style:italic;color:var(--border);line-height:1}
+    .proj-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--ink);margin-bottom:8px;transition:color 0.2s}
+    .proj-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+    .proj-tag{font-size:0.7rem;color:var(--ink-faint);background:var(--paper);border:1px solid var(--border);padding:3px 10px;border-radius:2px}
+    .proj-arrow{font-size:1.3rem;color:var(--border);transition:transform 0.25s,color 0.2s}
     .contact-strip{border-top:1px solid var(--border);padding:56px}
     .contact-inner{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:40px}
     .contact-inner h3{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900}
@@ -37,12 +43,12 @@
     footer em{font-family:'Playfair Display',serif;font-style:italic;color:var(--ink-light)}
     .fade-up{opacity:0;transform:translateY(20px);animation:fadeUp 0.6s ease forwards}
     @keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
-    .d1{animation-delay:.05s}.d2{animation-delay:.18s}
-    @media(max-width:760px){nav{padding:16px 20px}nav ul{gap:16px}.page-header{padding:100px 24px 40px}.content-wrap{padding:40px 24px 60px}.contact-strip{padding:40px 24px}.contact-inner{flex-direction:column;align-items:flex-start}.contact-links{flex-direction:column}footer{padding:20px 24px;flex-direction:column;gap:6px}}
+    .d1{animation-delay:.05s}.d2{animation-delay:.18s}.d3{animation-delay:.3s}
+    @media(max-width:760px){nav{padding:16px 20px}nav ul{gap:16px}.page-header{padding:100px 24px 40px}.content-wrap{padding:40px 24px 60px}.project-row{grid-template-columns:48px 1fr auto;gap:14px}.contact-strip{padding:40px 24px}.contact-inner{flex-direction:column;align-items:flex-start}.contact-links{flex-direction:column}footer{padding:20px 24px;flex-direction:column;gap:6px}}
   </style>
 </head>
 <body>
-
+	
 <nav>
   <a class="nav-logo" href="../index.html">Philippe Buteau</a>
   <ul>
@@ -55,16 +61,31 @@
 
 <div class="page-header fade-up d1">
   <div class="breadcrumb"><a href="../index.html">Accueil</a><span>/</span>Serveurs &amp; Réseautique</div>
-  <h1>Serveurs, Réseautique<br>&amp; <em>Virtualisation</em></h1>
+  <h1>Serveurs, Réseautique<br>& Virtualisation</em></h1>
   <p class="subtitle">Collection de courts laboratoires sur les serveurs, la réseautique et la virtualisation.</p>
 </div>
 
 <div class="content-wrap fade-up d2">
-  <div class="coming-card">
-    <h3>Contenu à venir</h3>
-    <p>Les laboratoires de cette section sont en cours de documentation.<br>Revenez bientôt pour découvrir les projets.</p>
-  </div>
+  <a href="pqt_vlan_ether/pqt.html" class="project-row">
+    <div class="proj-num">01</div>
+    <div>
+      <div class="proj-title">Configuration de routeurs et commutateurs</div>
+      <div class="proj-tags"><span class="proj-tag">Cisco</span><span class="proj-tag">VLAN</span><span class="proj-tag">OSPF</span><span class="proj-tag">STP</span><span class="proj-tag">Ether-Channel</span><span class="proj-tag">Truncs</span></div>
+    </div>
+    <div class="proj-arrow">→</div>
+  </a>
+  
+    <a href="monLab/monLab.html" class="project-row">
+    <div class="proj-num">02</div>
+    <div>
+      <div class="proj-title">Mon Laboratoire</div>
+        <div class="proj-tags"><span class="proj-tag">Projet personnel d'infrastructure, de configuration et d'expérimentation en environnement contrôlé.</span></div>
+    </div>
+    <div class="proj-arrow">→</div>
+  </a>
+
 </div>
+
 
 <div class="contact-strip">
   <div class="contact-inner">

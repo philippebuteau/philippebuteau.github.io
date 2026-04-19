@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestion de base de données – Philippe Buteau</title>
+  <style>
+    :root{--cream:#f7f3ee;--paper:#ede8e0;--ink:#1a1714;--ink-light:#5a5550;--ink-faint:#a09890;--rust:#c0552a;--rust-light:#e8ddd7;--border:#d6cfc5}
+    *{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+    body{background:var(--cream);color:var(--ink);font-family:'DM Sans',sans-serif;font-weight:300}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:20px 56px;background:rgba(247,243,238,0.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+    .nav-logo{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--ink);text-decoration:none}
+    nav ul{list-style:none;display:flex;gap:32px}
+    nav ul a{color:var(--ink-light);text-decoration:none;font-size:0.82rem;font-weight:400;letter-spacing:0.07em;text-transform:uppercase;transition:color 0.2s}
+    nav ul a:hover{color:var(--rust)}
+    .page-header{padding:130px 56px 56px;border-bottom:1px solid var(--border);max-width:1100px;margin:0 auto}
+    .breadcrumb{font-size:0.72rem;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:20px}
+    .breadcrumb a{color:var(--ink-faint);text-decoration:none;transition:color 0.2s}
+    .breadcrumb a:hover{color:var(--rust)}
+    .breadcrumb span{margin:0 8px;color:var(--border)}
+    .page-header h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3.8rem);font-weight:900;line-height:1.05;letter-spacing:-0.02em;color:var(--ink)}
+    .page-header h1 em{font-style:italic;color:var(--rust)}
+    .page-header .subtitle{margin-top:16px;font-size:0.95rem;color:var(--ink-faint);line-height:1.6}
+    .tag-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+    .tag{padding:5px 13px;border:1px solid var(--border);font-size:0.75rem;color:var(--ink-light);background:var(--paper);border-radius:2px}
+    .content-wrap{max-width:1100px;margin:0 auto;padding:64px 56px 100px}
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:60px;margin-bottom:52px}
+    .block{margin-bottom:52px}
+    .block-title{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;color:var(--ink);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+    .block p{font-size:0.97rem;line-height:1.85;color:var(--ink-light);margin-bottom:14px}
+    .block p strong{color:var(--ink);font-weight:500}
+    .block ul{padding-left:20px}
+    .block ul li{font-size:0.95rem;line-height:1.8;color:var(--ink-light);margin-bottom:6px}
+    .img-card{background:var(--paper);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+    .img-card img{width:100%;display:block}
+    .img-card-label{padding:16px 20px;font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--ink);border-top:1px solid var(--border)}
+    .demo-wrap{background:var(--paper);border:1px solid var(--border);border-radius:4px;padding:32px;text-align:center}
+    .demo-wrap video{max-width:100%;border-radius:2px}
+    .coming-soon{font-family:'Playfair Display',serif;font-style:italic;color:var(--ink-faint);font-size:0.95rem;padding:20px 0}
+    .contact-strip{border-top:1px solid var(--border);padding:56px}
+    .contact-inner{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:40px}
+    .contact-inner h3{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900}
+    .contact-links{display:flex;gap:16px}
+    .contact-link{display:flex;align-items:center;gap:12px;padding:14px 22px;background:var(--paper);border:1px solid var(--border);border-radius:4px;text-decoration:none;color:var(--ink);font-size:0.88rem;transition:border-color 0.2s,background 0.2s}
+    .contact-link:hover{border-color:var(--rust);background:var(--rust-light)}
+    footer{border-top:1px solid var(--border);padding:24px 56px;display:flex;justify-content:space-between;font-size:0.75rem;color:var(--ink-faint)}
+    footer em{font-family:'Playfair Display',serif;font-style:italic;color:var(--ink-light)}
+    .fade-up{opacity:0;transform:translateY(20px);animation:fadeUp 0.6s ease forwards}
+    @keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
+    .d1{animation-delay:.05s}.d2{animation-delay:.18s}.d3{animation-delay:.3s}
+    @media(max-width:760px){nav{padding:16px 20px}nav ul{gap:16px}.page-header{padding:100px 24px 40px}.content-wrap{padding:40px 24px 60px}.two-col{grid-template-columns:1fr}.contact-strip{padding:40px 24px}.contact-inner{flex-direction:column;align-items:flex-start}.contact-links{flex-direction:column}footer{padding:20px 24px;flex-direction:column;gap:6px}}
+	.code-block {
+	  background: #1a1714;
+	  border-radius: 4px;
+	  overflow: auto;
+	  padding: 28px 32px;
+	}
+	.code-block pre {
+	  margin: 0;
+	  font-family: 'Courier New', monospace;
+	  font-size: 0.82rem;
+	  line-height: 1.7;
+	  color: #ede8e0;
+	  white-space: pre;
+	} 
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="../../index.html">Philippe Buteau</a>
+  <ul>
+    <li><a href="../../index.html">Accueil</a></li>
+    <li><a href="../serveurs.html">Réseautique</a></li>
+  </ul>
+</nav>
+
+<div class="page-header fade-up d1">
+  <div class="breadcrumb"><a href="../../index.html">Accueil</a><span>/</span><a href="../serveurs.html">Réseautique</a><span>/</span>Base de données</div>
+  <h1>Configuration de routeurs et commutateurs<br>VLAN, Ether-channels et Routage</em></h1>
+  <p class="subtitle">Laboratoire sur le simulateur cisco paquet-tracer</p>
+  <div class="tag-list">
+    <span class="tag">Réseautique</span><span class="tag">VLAN</span><span class="tag">EtherChannel</span><span class="tag">Spanning Tree</span><span class="tag">Routeurs</span><span class="tag">Commutateurs</span><span class="tag">OSPF</span>
+  </div>
+</div>
+
+<div class="content-wrap">
+
+  <div class="two-col fade-up d2">
+    <div class="block">
+      <div class="block-title">Contexte</div>
+      <p>Cette page décris un laboratoire réalisé sur paquet tracer pour documenter les configurations
+      nécéssaire pour construire un réseau utilisant VLAN, truncs, etherchannels et routage dynamique.</p>
+      <p>Pour commencer, une petit résumé de ces fonctionalitées.</p>
+      <p>Les VLANs sont des réseaux locaux virtuels. Ils permettent d'utiliser les mêmes médias physiques
+      pour transmettre l'information de réseaux différents. Plusieurs réseaux peuvent transiger par le 
+      même commutateur, dans le même fil ou interface. Cela permet d'utiliser moins d'appareils, de
+      mieux organiser les réseaux, d'avoir des membres d'un même réseaux à plusieurs endroits et de
+      limiter les domaines de diffusions, ce qui augmente les performances.</p>
+      <p>Ce qui permet aux VLANs d'utiliser les mêmes interfaces et connexions filaires, c'est une configuration
+      en 'trunc'. L'etherchannel lui permet d'utiliser plusieurs connexions filaires comme si elles n'en étaient qu'une,
+      ce qui permet d'augmenter la bande passante et la tolérance aux pannes.</p>
+    </div>
+    <div class="block">
+      <div class="block-title">Fonctionnalités</div>
+      <ul>
+        <li>3 commutateurs connectés par un double lien ether channel</li>
+        <li>Configuration de 'truncs' pour acheminer les VLANs</li>
+        <li>Terminaux connectés aux même VLANs depuis différents endroits dans le réseau</li>
+        <li>1 routeur pour le routage des VLANs en utilisant la méthode 'router on a stick'</li>
+        <li>Configuration du pont racine pour le protocole STP</li>
+        <li>Configuration du routage dynamique avec OSPF et deux routeurs supplémentaires pour 
+        tester l'annonce des réseaux</li>
+        <li>Sécurisation de l'accès aux périphériques</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block fade-up d3">
+    <div class="block-title">Topologie Logique</div>
+    <div class="img-card">
+      <img src="demo.png" alt="Topologie logique du laboratoire">
+      <div class="img-card-label">Diagramme réseau — Infrastructure virtuelle</div>
+    </div>
+  </div>
+
+	<div class="block fade-up d3">
+	  <div class="block-title">Configuration des VLANs sur le routeur R1</div>
+	  <div class="code-block">
+		<pre><code id="bash-code">
+interface GigabitEthernet0/0.10
+ description VLAN 10
+ encapsulation dot1Q 10
+ ip address 10.0.10.1 255.255.255.0
+!
+interface GigabitEthernet0/0.20
+ description VLAN 20
+ encapsulation dot1Q 20
+ ip address 10.0.20.1 255.255.255.0
+!
+interface GigabitEthernet0/0.30
+ description VLAN 30
+ encapsulation dot1Q 30
+ ip address 10.0.30.1 255.255.255.0
+!
+interface GigabitEthernet0/0.99
+ description VLAN 99 - Management
+ encapsulation dot1Q 99
+ ip address 10.0.0.1 255.255.255.0
+!
+interface GigabitEthernet0/0
+ description trunc r1-1
+ no ip address
+ ip ospf 1 area 0.0.0.0
+ duplex auto
+ speed auto
+		</code></pre>
+	  </div>
+	</div>
+	
+	<div class="block fade-up d3">
+	  <div class="block-title">Configuration de 2 interfaces en etherchannel et trunc pour les VLANs</div>
+	  <div class="code-block">
+		<pre><code id="bash-code">
+ interface Port-channel1
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 10,20,30,99
+ switchport mode trunk
+!
+interface FastEthernet0/2
+ description trunc 1-3
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 10,20,30,99
+ switchport mode trunk
+ duplex full
+ channel-group 1 mode active
+! 
+ interface FastEthernet0/4
+ description trunc 1-3
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 10,20,30,99
+ switchport mode trunk
+ duplex full
+ channel-group 1 mode active
+		</code></pre>
+	  </div>
+	</div>
+	
+	<div class="block fade-up d3">
+	  <div class="block-title">Configuration d'un pont racine pour contrôler quel port STP garde ouvert</div>
+	  <div class="code-block">
+		<pre><code id="bash-code">
+spanning-tree mode pvst
+spanning-tree extend system-id
+spanning-tree vlan 1,10,20,30,99 priority 4096
+		</code></pre>
+	  </div>
+	</div>
+	
+	<div class="block fade-up d3">
+	  <div class="block-title">Configuration du routage dynamique OSPF sur le routeur R1</div>
+	  <div class="code-block">
+		<pre><code id="bash-code">
+interface GigabitEthernet0/1
+ description to R2
+ ip address 192.168.0.1 255.255.255.252
+ ip ospf 1 area 0.0.0.0
+ duplex auto
+ speed auto
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+router ospf 1
+ router-id 2.2.2.2
+ log-adjacency-changes
+ 		</code></pre>
+	  </div>
+	</div>
+
+	<div class="block fade-up d3">
+	  <div class="block-title">Configuration de base</div>
+	  <div class="code-block">
+		<pre><code id="bash-code">
+service password-encryption
+hostname S1
+enable secret 5 $1$mERr$FvP868ZenSAyl3xMNJjAU0
+ip ssh version 2
+no ip domain-lookup
+ip domain-name DOMAIN.tld
+username admin secret 5 $1$mERr$GvDaTJK9lhdXRUPWKA74O0
+interface Vlan99
+ description management VLAN
+ ip address 10.0.0.10 255.255.255.0
+!
+ip default-gateway 10.0.0.1
+!
+banner motd ^CRestricted access^C
+!
+line con 0
+ password 7 082243401A160912
+ login
+!
+line vty 0 4
+ login local
+ transport input ssh
+line vty 5 15
+ login local
+ transport input ssh
+!
+		</code></pre>
+	  </div>
+	</div>
+
+<div class="contact-strip">
+  <div class="contact-inner">
+    <h3>Me contacter</h3>
+    <div class="contact-links">
+      <a href="mailto:p.buteau@hotmail.ca" class="contact-link">✉ &nbsp;p.buteau@hotmail.ca</a>
+      <a href="https://www.linkedin.com/in/philippe-buteau-7a0274110" target="_blank" class="contact-link">↗ &nbsp;LinkedIn</a>
+    </div>
+  </div>
+</div>
+
+<footer><em>Philippe Buteau</em><span>© 2026 — Tous droits réservés</span></footer>
+</body>
+</html>
