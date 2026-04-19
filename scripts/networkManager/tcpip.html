@@ -82,7 +82,7 @@
   <h1>Configuration TCP/IP<br>sous linux</em></h1>
   <p class="subtitle">Script bash pour automatiser la configuration des interfaces réseau sous linux/</p>
   <div class="tag-list">
-    <span class="tag">Réseautique</span><span class="tag">bash</span><span class="tag">VLAN</span><span class="tag">BOND</span><span class="tag">Adressage</span>
+    <span class="tag">Réseautique</span><span class="tag">bash</span><span class="tag">VLAN</span><span class="tag">BOND</span><span class="tag">Adressage</span><span class="tag">MariaDB</span>
   </div>
 </div>
 
@@ -91,19 +91,36 @@
   <div class="two-col fade-up d2">
     <div class="block">
       <div class="block-title">Contexte</div>
-      <p>Conception d'un script paramétrable pour configurer les interfaces réseaux sous linux</p>
+      <p>Cette page documente un projet qui visait d'abord à créer un script pour configurer TCP/IP sur une interface rapidement. Ce script m'a mené vers l'exploration d'autres types de configurations, tels que les VLANS et les interfaces de types 'bond' et 'team'</p>
+      <p>Vous trouverez donc ici un outil pour faciliter la création de ces interfaces sous Linux</p>
     </div>
     <div class="block">
-      <div class="block-title">Fonctionnalités</div>
+      <div class="block-title">Mandat</div>
       <ul>
-        <li>Configuration IPv4 de base</li>
-        <li>Configuration d'interfaces en VLAN</li>
-        <li>Configuration d'interface en mode BOND (Plusieurs interfaces logiquement agrégées)</li>
-        <li>Affichage de la configuration actuelle</li>
-        <li>Supprimer la configuration d'une interface</li>
-        <li>Supprimer la configuration de toutes les interfaces</li>
-        <li>Configurer automatiquement toutes les interfaces depuis mariadb</li>
+        <li>Outil terminal pour configurer rapidement plusieurs types d'interfaces :</li>
+        <ul>
+          <li>Configuration ipv4</li>
+          <li>Configuration de la passerelle par défaut</li>
+          <li>Configuration des addresses des serveurs DNS</li>
+          <li>Configuration de la méthode d'addressage (Statique ou Automatique)</li>
+          <li>Configuration d'un profil d'interface ethernet</li>
+          <li>Configuration d'une interface en VLAN</li>
+          <li>Configuration de plusieurs interfaces en 'bond'</li>
+          <li>Configuration de plusieurs interfaces en 'team'</li>
+          <li>Suppression du profil d'une interface</li>
+          <li>Configuration automatique depuis MariaDB</li>
+        </ul>
       </ul>
+    </div>
+  </div>
+
+  <div class="block fade-up d3">
+    <div class="block-title">Démonstration</div>
+    <div class="demo-wrap">
+      <video controls>
+        <source src="networkManager.mp4" type="video/mp4">
+        Votre navigateur ne supporte pas la lecture vidéo.
+      </video>
     </div>
   </div>
 
