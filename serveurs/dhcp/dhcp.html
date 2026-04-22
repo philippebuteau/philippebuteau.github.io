@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DHCP – Philippe Buteau</title>
+  <style>
+    :root{--cream:#f7f3ee;--paper:#ede8e0;--ink:#1a1714;--ink-light:#5a5550;--ink-faint:#a09890;--rust:#c0552a;--rust-light:#e8ddd7;--border:#d6cfc5}
+    *{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+    body{background:var(--cream);color:var(--ink);font-family:'DM Sans',sans-serif;font-weight:300}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:20px 56px;background:rgba(247,243,238,0.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+    .nav-logo{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--ink);text-decoration:none}
+    nav ul{list-style:none;display:flex;gap:32px}
+    nav ul a{color:var(--ink-light);text-decoration:none;font-size:0.82rem;font-weight:400;letter-spacing:0.07em;text-transform:uppercase;transition:color 0.2s}
+    nav ul a:hover{color:var(--rust)}
+    .page-header{padding:130px 56px 56px;border-bottom:1px solid var(--border);max-width:1100px;margin:0 auto}
+    .breadcrumb{font-size:0.72rem;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:20px}
+    .breadcrumb a{color:var(--ink-faint);text-decoration:none;transition:color 0.2s}
+    .breadcrumb a:hover{color:var(--rust)}
+    .breadcrumb span{margin:0 8px;color:var(--border)}
+    .page-header h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3.8rem);font-weight:900;line-height:1.05;letter-spacing:-0.02em;color:var(--ink)}
+    .page-header h1 em{font-style:italic;color:var(--rust)}
+    .page-header .subtitle{margin-top:16px;font-size:0.95rem;color:var(--ink-faint);line-height:1.6}
+    .tag-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+    .tag{padding:5px 13px;border:1px solid var(--border);font-size:0.75rem;color:var(--ink-light);background:var(--paper);border-radius:2px}
+    .content-wrap{max-width:1100px;margin:0 auto;padding:64px 56px 100px}
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:60px;margin-bottom:52px}
+    .block{margin-bottom:52px}
+    .block-title{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;color:var(--ink);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+    .block p{font-size:0.97rem;line-height:1.85;color:var(--ink-light);margin-bottom:14px}
+    .block p strong{color:var(--ink);font-weight:500}
+    .block ul{padding-left:20px}
+    .block ul li{font-size:0.95rem;line-height:1.8;color:var(--ink-light);margin-bottom:6px}
+    .img-card{background:var(--paper);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+    .img-card img{width:100%;display:block}
+    .img-card-label{padding:16px 20px;font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--ink);border-top:1px solid var(--border)}
+    .demo-wrap{background:var(--paper);border:1px solid var(--border);border-radius:4px;padding:32px;text-align:center}
+    .demo-wrap video{max-width:100%;border-radius:2px}
+    .coming-soon{font-family:'Playfair Display',serif;font-style:italic;color:var(--ink-faint);font-size:0.95rem;padding:20px 0}
+    .contact-strip{border-top:1px solid var(--border);padding:56px}
+    .contact-inner{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:40px}
+    .contact-inner h3{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900}
+    .contact-links{display:flex;gap:16px}
+    .contact-link{display:flex;align-items:center;gap:12px;padding:14px 22px;background:var(--paper);border:1px solid var(--border);border-radius:4px;text-decoration:none;color:var(--ink);font-size:0.88rem;transition:border-color 0.2s,background 0.2s}
+    .contact-link:hover{border-color:var(--rust);background:var(--rust-light)}
+    footer{border-top:1px solid var(--border);padding:24px 56px;display:flex;justify-content:space-between;font-size:0.75rem;color:var(--ink-faint)}
+    footer em{font-family:'Playfair Display',serif;font-style:italic;color:var(--ink-light)}
+    .fade-up{opacity:0;transform:translateY(20px);animation:fadeUp 0.6s ease forwards}
+    @keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
+    .d1{animation-delay:.05s}.d2{animation-delay:.18s}.d3{animation-delay:.3s}
+    @media(max-width:760px){nav{padding:16px 20px}nav ul{gap:16px}.page-header{padding:100px 24px 40px}.content-wrap{padding:40px 24px 60px}.two-col{grid-template-columns:1fr}.contact-strip{padding:40px 24px}.contact-inner{flex-direction:column;align-items:flex-start}.contact-links{flex-direction:column}footer{padding:20px 24px;flex-direction:column;gap:6px}}
+	.code-block {
+	  background: #1a1714;
+	  border-radius: 4px;
+	  overflow: auto;
+	  padding: 28px 32px;
+	}
+	.code-block pre {
+	  margin: 0;
+	  font-family: 'Courier New', monospace;
+	  font-size: 0.82rem;
+	  line-height: 1.7;
+	  color: #ede8e0;
+	  white-space: pre;
+	} 
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="../../index.html">Philippe Buteau</a>
+  <ul>
+    <li><a href="../../index.html">Accueil</a></li>
+    <li><a href="../serveurs.html">Réseautique</a></li>
+  </ul>
+</nav>
+
+<div class="page-header fade-up d1">
+  <div class="breadcrumb"><a href="../../index.html">Accueil</a><span>/</span><a href="../serveurs.html">Réseautique</a><span>/</span>DHCP</div>
+  <h1>Configuration d'un serveur DHCP sous Linux<br>avec kea-dhcp et mariadb</em></h1>
+  <div class="tag-list">
+    <span class="tag">Réseautique</span><span class="tag">DHCP</span><span class="tag">MariaDB</span>
+  </div>
+</div>
+
+<div class="content-wrap">
+
+  <div class="block fade-up d3">
+    <div class="block">
+      <div class="block-title">Contexte</div>
+      <p>J'ai initialement appris la configuration d'un serveur DHCP sous linux avec le paquet 'dhcp-server'. Après un peu de recherche, j'ai découvert le paquet kea-dhcp qui remplace progressivement dhcp-server. J'ai donc entrepris de découvir son fonctionnement. Cette page documente la démarche à suivre pour configurer kea-dhcp4 avec et sans mariaDB.</p>
+      <p>Une première chose à savoir est qu'il utilise un fichier de configuration de type JSON. Il est aussi possible de le configurer conjointement avec une base de données relationelle. Cette fonctionalité permet de consulter les réservations actives en temps réel, un peu comme les logs du paquet dhcp-server. Il est aussi possible d'enregistrer les réservations dhcp avec des insertions dans cette base de données.</p>
+      </div>
+    </div>
+  </div>
+
+<div class="content-wrap">
+    <div class="block fade-up d3">
+	  <div class="block-title">Installation des paquets nécéssaires</div>
+	  <div class="code-block">
+		<pre><code id="bash-code">
+dnf install kea -y		
+
+# Installation pour utilisation avec mariadb :
+curl -1sLf 'https://dl.cloudsmith.io/public/isc/kea-2-6/setup.rpm.sh' | sudo bash
+dnf install -y isc-kea-dhcp4 isc-kea-admin isc-kea-hooks mariadb-server
+		</code></pre>
+	  </div>
+	</div>
+
+	  <div class="block-title">Fichier de configuration</div>
+	  <p>Le fichier de configuration de kea pour le dhcp IPv4 est le /etc/kea/kea-dhcp4.conf. Comme énoncé plus haut, il s'agit d'un fichier JSON. La configuration suivante permet d'utiliser kea-dhcp sans base de données. Deux sous-réseaux sont configurés avec pools, options et réservations.</p>
+	  <div class="code-block">
+		<pre><code id="bash-code">
+{
+        "Dhcp4": {
+                "lease-database": {
+                    "type": "memfile",
+                    "persist": true,
+                    "name": "/var/lib/kea/dhcp4.leases"
+                },
+                "interfaces-config": {
+                        "interfaces": [ "ens160","ens224" ]
+                },
+           "valid-lifetime": 86400,
+                "subnet4": [
+                        {
+                        "id": 1,
+                                "subnet": "192.168.13.0/24",
+                                "pools": [ { "pool": "192.168.13.200 - 192.168.13.250" } ],
+                                "reservations": [
+                                        { "hw-address": "00:0C:29:07:87:FA",
+                                        "ip-address": "192.168.13.250",
+                                        "hostname": "WindowsPC-01" }
+                                ],
+                                "option-data": [
+                                        { "name": "routers", "data": "192.168.13.1" },
+                                        { "name": "domain-name-servers", "data": "192.168.13.1,8.8.8.8" },
+                                        { "name": "domain-name", "data": "bixiville.net" }
+                                ]
+                        },
+                        {
+                        "id": 2,
+                                "subnet": "192.168.213.0/24",
+                                "pools": [ { "pool": "192.168.213.200 - 192.168.213.250" } ],
+                                "reservations": [
+                                        { "hw-address": "00:0C:29:7D:28:78",
+                                        "ip-address": "192.168.213.250",
+                                        "hostname": "WindowsPC-02" }
+                                ],
+                                "option-data": [
+                                        { "name": "routers", "data": "192.168.213.1" },
+                                        { "name": "domain-name-servers", "data": "192.168.13.1,8.8.8.8" },
+                                        { "name": "domain-name", "data": "bixiville.net" }
+                                ]
+                        }
+                ]
+        }
+}	
+		</code></pre>
+	  </div>
+	
+    <div class="block fade-up d3">
+	  <div class="block-title">Configuration avec mariaDB</div>
+	  <p>Pour configurer le service avec mariaDB, il faut remplacer le bloc 'lease-database dans le fichier de configuration par les deux blocs suivants'</p>
+	  <div class="code-block">
+		<pre><code id="bash-code">
+{
+    "Dhcp4": {
+	"lease-database": {
+            "type": "mysql",
+            "host": "localhost",
+            "name": "kea",
+            "user": "kea",
+            "password": "########",
+            "reconnect-wait-time": 3000,
+            "max-reconnect-tries": 5
+        },
+	"hosts-database": {
+            "type": "mysql",
+            "host": "localhost",
+            "name": "kea",
+            "user": "kea",
+            "password": "########"
+        },
+	…
+	…
+		</code></pre>
+	  </div>
+	</div>
+	
+	<div class="block fade-up d3">
+	  <div class="block-title">Utilisateur kea</div>
+	  <p>Il faut ensuite créer l'utilisateur mariaDB</p>
+	  <div class="code-block">
+		<pre><code id="bash-code">
+mysql -u USER -p --EOF
+CREATE DATABASE kea;
+CREATE USER 'kea'@'localhost' IDENTIFIED BY '########';
+GRANT ALL PRIVILEGES ON kea.* TO 'kea'@'localhost';
+FLUSH PRIVILEGES;
+EOF
+ 		</code></pre>
+	  </div>
+	</div>
+
+	<div class="block fade-up d3">
+	  <p>Puis on utilise l'utilitaire kea-admin pour initialiser la base de données (schéma)</p>
+	  <div class="code-block">
+		<pre><code id="bash-code">
+kea-admin db-init mysql -u kea -p######### -n kea -h localhost
+		</code></pre>
+	  </div>
+	</div>
+
+	<div class="block fade-up d3">
+	  <div class="block-title">Les commandes de gestion du service:</div>
+	  <div class="code-block">
+		<pre><code id="bash-code">
+# Vérification de la syntaxe du fichier de configuration
+kea-dhcp4 -t /etc/kea/kea-dhcp4.conf
+
+# Redémarrage du service
+systemctl restart kea-dhcp4.service
+systemctl enable --now kea-ctrl-agent.service  #Agent du service ()
+
+# Vérification des baux en mode sans base de données
+tail -f /var/lib/kea/dhcp4.leases
+
+# Vérification des journaux
+journalctl -e -u kea-dhcp4
+		</code></pre>
+	  </div>
+	</div>
+
+	<div class="block fade-up d3">
+	  <div class="block-title">Visualisation des baux</div>
+	  <p>Il faut reformater certaines informations pour pouvoir bien les visualiser. Voici une requête mariaDB qui permet de visualiser les baux actifs</p>
+	  <div class="code-block">
+		<pre><code id="bash-code">
+mysql -u kea -p######### kea -e "
+SELECT INET_NTOA(address) AS ip_address, 
+HEX(hwaddr) AS mac_address, 
+hostname, 
+subnet_id, 
+valid_lifetime, 
+expire, 
+CASE state 
+WHEN 0 THEN 'active' 
+WHEN 1 THEN 'declined' 
+WHEN 2 THEN 'expired'
+ END AS state 
+FROM lease4; "
+		</code></pre>
+	  </div>
+	</div>
+  <div class="block fade-up d3">
+    <div class="block-title">Exemple de sortie</div>
+    <div class="img-card">
+      <img src="demo_01.PNG" alt="Topologie logique du laboratoire">
+      <div class="img-card-label">Sortie de la requête</div>
+    </div>
+  </div>
+
+	<div class="block fade-up d3">
+	  <div class="block-title">Insertion d'enregistrements</div>
+	  <p>Toujours via la base de données, il est possible d'insérer des enregistrements pour les réservations d'hôtes. Voici un exemple: </p>
+	  <div class="code-block">
+		<pre><code id="bash-code">
+-- WindowsPC-01 on subnet 1 (192.168.13.0/24)
+INSERT INTO hosts (
+    dhcp_identifier,
+    dhcp_identifier_type,
+    dhcp4_subnet_id,
+    ipv4_address,
+    hostname
+) VALUES (
+    UNHEX('000C290787FA'),  -- MAC 00:0C:29:07:87:FA
+    0,                      -- 0 = hw-address
+    1,                      -- subnet id
+    INET_ATON('192.168.13.250'),
+    'WindowsPC-01'
+);
+
+-- WindowsPC-02 on subnet 2 (192.168.213.0/24)
+INSERT INTO hosts (
+    dhcp_identifier,
+    dhcp_identifier_type,
+    dhcp4_subnet_id,
+    ipv4_address,
+    hostname
+) VALUES (
+    UNHEX('000C297D2878'),  -- MAC 00:0C:29:7D:28:78
+    0,                      -- 0 = hw-address
+    2,                      -- subnet id
+    INET_ATON('192.168.213.250'),
+    'WindowsPC-02'
+);
+mysql -u kea -p######### kea < kea_hosts.sql
+
+		</code></pre>
+	  </div>
+	</div>
+
+	<div class="block fade-up d3">
+	  <div class="block-title">Visualisation des réservations</div>
+	  <p>Cette requête permet de voir les réservations actives: </p>
+	  <div class="code-block">
+		<pre><code id="bash-code">
+mysql -u kea -p######### kea -e "SELECT
+    host_id,
+    HEX(dhcp_identifier)     AS mac_address,
+    dhcp4_subnet_id          AS subnet_id,
+    INET_NTOA(ipv4_address)  AS ip_address,
+    hostname
+FROM hosts;"
+		</code></pre>
+	  </div>
+	</div>
+  <div class="block fade-up d3">
+    <div class="block-title">Exemple de sortie</div>
+    <div class="img-card">
+      <img src="demo_02.PNG" alt="Topologie logique du laboratoire">
+      <div class="img-card-label">Sortie de la requête</div>
+    </div>
+  </div>
+
+</div>
+<div class="contact-strip">
+  <div class="contact-inner">
+    <h3>Me contacter</h3>
+    <div class="contact-links">
+      <a href="mailto:p.buteau@hotmail.ca" class="contact-link">✉ &nbsp;p.buteau@hotmail.ca</a>
+      <a href="https://www.linkedin.com/in/philippe-buteau-7a0274110" target="_blank" class="contact-link">↗ &nbsp;LinkedIn</a>
+    </div>
+  </div>
+</div>
+
+<footer><em>Philippe Buteau</em><span>© 2026 — Tous droits réservés</span></footer>
+</body>
+</html>
